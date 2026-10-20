@@ -275,6 +275,13 @@ tasks.register('copyIcons', Sync) {
 	include "**/*.png", "**/*.xml"
 }
 
+// AGP navigation processing also reads the generated resource directory.
+tasks.configureEach {
+	if (name.startsWith('process') && name.endsWith('NavigationResources')) {
+		dependsOn tasks.named('copyIcons')
+	}
+}
+
 tasks.register('collectTestResources', Copy) {
 	into "test/assets/"
 	from("../../resources/test-resources/ui/") {
