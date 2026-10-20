@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <string name="aprs_name">APRS-IS</string>
+    <string name="aprs_description">View APRS stations and beacon GPS positions over APRS-IS while the map is open.</string>
+    <string name="aprs_callsign">Callsign and SSID</string>
+    <string name="aprs_passcode">APRS-IS passcode (-1 for receive only)</string>
+    <string name="aprs_host">Server</string>
+    <string name="aprs_port">Port</string>
+    <string name="aprs_beacon">Beacon GPS position every 2 minutes</string>
+    <string name="aprs_foreground_notice">Stations within 100 km of the map center at connection time. Beaconing needs a verified login and a GPS fix under 30 seconds old, accurate within 100 meters. Operation stops when the map leaves the foreground. Use the map location button to enable GPS.</string>
+    <string name="aprs_connect">Connect</string>
+    <string name="aprs_disconnect">Disconnect</string>
+    <string name="aprs_invalid_settings">Check the callsign, passcode, server, and port. Beaconing requires a passcode other than -1.</string>
+    <string name="aprs_state">Connection: %1$s · Stations: %2$d</string>
+    <string name="aprs_station_details">Latitude: %1$.5f\nLongitude: %2$.5f\nSymbol: %3$s\nLast heard: %4$d seconds ago\n%5$s</string>
 <!--
 	README:
 	- The preferred way to help with translations is via https://hosted.weblate.org/engage/osmand/

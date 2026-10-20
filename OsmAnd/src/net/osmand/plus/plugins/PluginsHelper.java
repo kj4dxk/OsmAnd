@@ -115,6 +115,7 @@ public class PluginsHelper {
 		allPlugins.add(new WeatherPlugin(app));
 		checkMarketPlugin(app, new NauticalMapsPlugin(app));
 		allPlugins.add(new AisTrackerPlugin(app));
+		allPlugins.add(new net.osmand.plus.plugins.aprs.AprsPlugin(app));
 		checkMarketPlugin(app, new SkiMapsPlugin(app));
 		allPlugins.add(new AudioVideoNotesPlugin(app));
 		checkMarketPlugin(app, new ParkingPositionPlugin(app));
