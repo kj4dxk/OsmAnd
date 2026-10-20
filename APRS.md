@@ -6,6 +6,25 @@ the map menu. Enter your callsign/SSID and connect. Passcode `-1` is receive-onl
 GPS beaconing is off by default and requires a valid APRS-IS passcode plus server
 verification. The map location button enables OsmAnd's normal GPS handling.
 
+Settings have separate callsign and numeric SSID (0–15) inputs. SSID 0 sends the
+base callsign without `-0`; SSID 9 produces, for example, `KJ4DXK-9`. The APRS-IS
+passcode is masked. **Save without connecting** stores settings and stops any
+existing connection; **Connect** saves and opens the selected connection.
+
+The server selector defaults to `rotate.aprs2.net:14580`. Its bundled directory
+contains 107 endpoints checked on 2026-10-20: worldwide/regional/country pools,
+individual public servers, and the core/FireNet endpoints listed by APRS-IS.
+The snapshot comes from `https://status.aprs2.net/api/full` and the APRS-IS server
+directory. Internal hubs, monitoring pseudo-rotates, CWOP weather endpoints,
+and TLS-only rotates are excluded from this plaintext APRS client. Availability
+is not guaranteed by inclusion; the worldwide/regional Tier 2 pools are preferred.
+
+Choose **Custom server…** to enter a hostname, `host:port`, `tcp://host:port`, or
+`aprs://host:port`. IPv6 literals use brackets, for example `tcp://[::1]:14580`.
+An explicit URL port overrides the separate port field. HTTP/HTTPS/WS/WSS,
+embedded credentials, URL paths, and query strings are rejected because this
+client currently implements APRS-IS over plaintext TCP only.
+
 This preview connects only while the map is in the foreground. It disconnects
 when the map pauses and reconnects when it resumes if the connection was enabled.
 It does not yet implement an Android foreground service or background beaconing.

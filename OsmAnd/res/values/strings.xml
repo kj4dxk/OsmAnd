@@ -2,7 +2,16 @@
 <resources>
     <string name="aprs_name">APRS-IS</string>
     <string name="aprs_description">View APRS stations and beacon GPS positions over APRS-IS while the map is open.</string>
-    <string name="aprs_callsign">Callsign and SSID</string>
+    <string name="aprs_callsign">Callsign (for example KJ4DXK)</string>
+    <string name="aprs_ssid">APRS dash code (SSID)</string>
+    <string name="aprs_ssid_zero">0 — No dash suffix</string>
+    <string name="aprs_server_preset">APRS-IS server</string>
+    <string name="aprs_custom_server">Custom server…</string>
+    <string name="aprs_custom_url">Custom APRS-IS server address</string>
+    <string name="aprs_custom_url_hint">tcp://example.org:14580 or example.org</string>
+    <string name="aprs_server_directory_note">Server directory checked %1$s. Tier 2 worldwide or regional pools are recommended. An address can go offline or change. Custom TCP URLs can include a port; HTTP and WebSocket URLs are not supported.</string>
+    <string name="aprs_save">Save without connecting</string>
+    <string name="aprs_settings_saved">APRS settings saved. Connection stopped.</string>
     <string name="aprs_passcode">APRS-IS passcode (-1 for receive only)</string>
     <string name="aprs_host">Server</string>
     <string name="aprs_port">Port</string>

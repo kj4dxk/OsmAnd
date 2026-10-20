@@ -1,0 +1,545 @@
+{
+  "checkedOn": "2026-10-20",
+  "sources": [
+    "https://www.aprs-is.net/aprsservers.aspx",
+    "https://status.aprs2.net/api/full",
+    "https://www.aprs2.net/"
+  ],
+  "servers": [
+    {
+      "host": "rotate.aprs2.net",
+      "port": 14580,
+      "name": "Main aprs2.net rotate — rotate.aprs2.net"
+    },
+    {
+      "host": "noam.aprs2.net",
+      "port": 14580,
+      "name": "North America — noam.aprs2.net"
+    },
+    {
+      "host": "soam.aprs2.net",
+      "port": 14580,
+      "name": "South America — soam.aprs2.net"
+    },
+    {
+      "host": "euro.aprs2.net",
+      "port": 14580,
+      "name": "Europe — euro.aprs2.net"
+    },
+    {
+      "host": "asia.aprs2.net",
+      "port": 14580,
+      "name": "Asia — asia.aprs2.net"
+    },
+    {
+      "host": "aunz.aprs2.net",
+      "port": 14580,
+      "name": "Australia and New Zealand — aunz.aprs2.net"
+    },
+    {
+      "host": "swiss.aprs2.net",
+      "port": 14580,
+      "name": "Switzerland — swiss.aprs2.net"
+    },
+    {
+      "host": "china.aprs2.net",
+      "port": 14580,
+      "name": "China — china.aprs2.net"
+    },
+    {
+      "host": "hungary.aprs2.net",
+      "port": 14580,
+      "name": "Hungary — hungary.aprs2.net"
+    },
+    {
+      "host": "nordic.aprs2.net",
+      "port": 14580,
+      "name": "Nordic countries — nordic.aprs2.net"
+    },
+    {
+      "host": "germany.aprs2.net",
+      "port": 14580,
+      "name": "Germany — germany.aprs2.net"
+    },
+    {
+      "host": "japan.aprs2.net",
+      "port": 14580,
+      "name": "Japan — japan.aprs2.net"
+    },
+    {
+      "host": "rotate.aprs.net",
+      "port": 14580,
+      "name": "Core — rotate.aprs.net"
+    },
+    {
+      "host": "fire.aprs2.net",
+      "port": 14580,
+      "name": "Firenet — fire.aprs2.net"
+    },
+    {
+      "host": "eighth.aprs.net",
+      "port": 14580,
+      "name": "EIGHTH — eighth.aprs.net"
+    },
+    {
+      "host": "fifth.aprs.net",
+      "port": 14580,
+      "name": "FIFTH — fifth.aprs.net"
+    },
+    {
+      "host": "first.aprs.net",
+      "port": 14580,
+      "name": "FIRST — first.aprs.net"
+    },
+    {
+      "host": "fourth.aprs.net",
+      "port": 14580,
+      "name": "FOURTH — fourth.aprs.net"
+    },
+    {
+      "host": "ninth.aprs.net",
+      "port": 14580,
+      "name": "NINTH — ninth.aprs.net"
+    },
+    {
+      "host": "second.aprs.net",
+      "port": 14580,
+      "name": "SECOND — second.aprs.net"
+    },
+    {
+      "host": "seventh.aprs.net",
+      "port": 14580,
+      "name": "SEVENTH — seventh.aprs.net"
+    },
+    {
+      "host": "sixth.aprs.net",
+      "port": 14580,
+      "name": "SIXTH — sixth.aprs.net"
+    },
+    {
+      "host": "alberta.aprs2.net",
+      "port": 14580,
+      "name": "T2ALBERTA — alberta.aprs2.net"
+    },
+    {
+      "host": "austria.aprs2.net",
+      "port": 14580,
+      "name": "T2AUSTRIA — austria.aprs2.net"
+    },
+    {
+      "host": "bc.aprs2.net",
+      "port": 14580,
+      "name": "T2BC — bc.aprs2.net"
+    },
+    {
+      "host": "belgium.aprs2.net",
+      "port": 14580,
+      "name": "T2BELGIUM — belgium.aprs2.net"
+    },
+    {
+      "host": "bio.aprs2.net",
+      "port": 14580,
+      "name": "T2BIO — bio.aprs2.net"
+    },
+    {
+      "host": "brazil.aprs2.net",
+      "port": 14580,
+      "name": "T2BRAZIL — brazil.aprs2.net"
+    },
+    {
+      "host": "yyz.aprs2.net",
+      "port": 14580,
+      "name": "T2CAEAST — yyz.aprs2.net"
+    },
+    {
+      "host": "ycw.aprs2.net",
+      "port": 14580,
+      "name": "T2CAWEST — ycw.aprs2.net"
+    },
+    {
+      "host": "chile.aprs2.net",
+      "port": 14580,
+      "name": "T2CHILE — chile.aprs2.net"
+    },
+    {
+      "host": "changsha.aprs2.net",
+      "port": 14580,
+      "name": "T2CS — changsha.aprs2.net"
+    },
+    {
+      "host": "csngrad.aprs2.net",
+      "port": 14580,
+      "name": "T2CSNGRAD — csngrad.aprs2.net"
+    },
+    {
+      "host": "czech.aprs2.net",
+      "port": 14580,
+      "name": "T2CZECH — czech.aprs2.net"
+    },
+    {
+      "host": "dallas.aprs2.net",
+      "port": 14580,
+      "name": "T2DALLAS — dallas.aprs2.net"
+    },
+    {
+      "host": "denmark.aprs2.net",
+      "port": 14580,
+      "name": "T2DENMARK — denmark.aprs2.net"
+    },
+    {
+      "host": "edmonton.aprs2.net",
+      "port": 14580,
+      "name": "T2EDM — edmonton.aprs2.net"
+    },
+    {
+      "host": "eisberg.aprs2.net",
+      "port": 14580,
+      "name": "T2EISBERG — eisberg.aprs2.net"
+    },
+    {
+      "host": "erfurt.aprs2.net",
+      "port": 14580,
+      "name": "T2ERFURT — erfurt.aprs2.net"
+    },
+    {
+      "host": "f5kav.aprs2.net",
+      "port": 14580,
+      "name": "T2F5KAV — f5kav.aprs2.net"
+    },
+    {
+      "host": "ffl.aprs2.net",
+      "port": 14580,
+      "name": "T2FFL — ffl.aprs2.net"
+    },
+    {
+      "host": "finland.aprs2.net",
+      "port": 14580,
+      "name": "T2FINLAND — finland.aprs2.net"
+    },
+    {
+      "host": "frankfurt.aprs2.net",
+      "port": 14580,
+      "name": "T2FRA — frankfurt.aprs2.net"
+    },
+    {
+      "host": "france.aprs2.net",
+      "port": 14580,
+      "name": "T2FRANCE — france.aprs2.net"
+    },
+    {
+      "host": "fukuoka.aprs2.net",
+      "port": 14580,
+      "name": "T2FUKUOKA — fukuoka.aprs2.net"
+    },
+    {
+      "host": "fuzhou.aprs2.net",
+      "port": 14580,
+      "name": "T2FZ — fuzhou.aprs2.net"
+    },
+    {
+      "host": "gb.aprs2.net",
+      "port": 14580,
+      "name": "T2GB — gb.aprs2.net"
+    },
+    {
+      "host": "greece.aprs2.net",
+      "port": 14580,
+      "name": "T2GREECE — greece.aprs2.net"
+    },
+    {
+      "host": "gyor.aprs2.net",
+      "port": 14580,
+      "name": "T2GYOR — gyor.aprs2.net"
+    },
+    {
+      "host": "hakata.aprs2.net",
+      "port": 14580,
+      "name": "T2HAKATA — hakata.aprs2.net"
+    },
+    {
+      "host": "hk.aprs2.net",
+      "port": 14580,
+      "name": "T2HK — hk.aprs2.net"
+    },
+    {
+      "host": "hun.aprs2.net",
+      "port": 14580,
+      "name": "T2HUN — hun.aprs2.net"
+    },
+    {
+      "host": "ireland.aprs2.net",
+      "port": 14580,
+      "name": "T2IRELAND — ireland.aprs2.net"
+    },
+    {
+      "host": "italy.aprs2.net",
+      "port": 14580,
+      "name": "T2ITALY — italy.aprs2.net"
+    },
+    {
+      "host": "jakarta.aprs2.net",
+      "port": 14580,
+      "name": "T2JKTP — jakarta.aprs2.net"
+    },
+    {
+      "host": "karlsruhe.aprs2.net",
+      "port": 14580,
+      "name": "T2KA — karlsruhe.aprs2.net"
+    },
+    {
+      "host": "koblenz.aprs2.net",
+      "port": 14580,
+      "name": "T2KOBLENZ — koblenz.aprs2.net"
+    },
+    {
+      "host": "lane.aprs2.net",
+      "port": 14580,
+      "name": "T2LANE — lane.aprs2.net"
+    },
+    {
+      "host": "lausitz.aprs2.net",
+      "port": 14580,
+      "name": "T2LAUSITZ — lausitz.aprs2.net"
+    },
+    {
+      "host": "lublin.aprs2.net",
+      "port": 14580,
+      "name": "T2LUBLIN — lublin.aprs2.net"
+    },
+    {
+      "host": "central.aprs2.net",
+      "port": 14580,
+      "name": "T2MCI — central.aprs2.net"
+    },
+    {
+      "host": "mexico.aprs2.net",
+      "port": 14580,
+      "name": "T2MEXICO — mexico.aprs2.net"
+    },
+    {
+      "host": "nala.aprs2.net",
+      "port": 14580,
+      "name": "T2NALA — nala.aprs2.net"
+    },
+    {
+      "host": "nanjing.aprs2.net",
+      "port": 14580,
+      "name": "T2NANJING — nanjing.aprs2.net"
+    },
+    {
+      "host": "netherlands.aprs2.net",
+      "port": 14580,
+      "name": "T2NL — netherlands.aprs2.net"
+    },
+    {
+      "host": "nuremberg.aprs2.net",
+      "port": 14580,
+      "name": "T2NUERNBG — nuremberg.aprs2.net"
+    },
+    {
+      "host": "oregon.aprs2.net",
+      "port": 14580,
+      "name": "T2OREGON — oregon.aprs2.net"
+    },
+    {
+      "host": "osaka.aprs2.net",
+      "port": 14580,
+      "name": "T2OSAKA — osaka.aprs2.net"
+    },
+    {
+      "host": "panama.aprs2.net",
+      "port": 14580,
+      "name": "T2PANAMA — panama.aprs2.net"
+    },
+    {
+      "host": "perth.aprs2.net",
+      "port": 14580,
+      "name": "T2PERTH — perth.aprs2.net"
+    },
+    {
+      "host": "poland.aprs2.net",
+      "port": 14580,
+      "name": "T2POLAND — poland.aprs2.net"
+    },
+    {
+      "host": "lodz.aprs2.net",
+      "port": 14580,
+      "name": "T2POLC — lodz.aprs2.net"
+    },
+    {
+      "host": "szczecin.aprs2.net",
+      "port": 14580,
+      "name": "T2POLNW — szczecin.aprs2.net"
+    },
+    {
+      "host": "puertorico.aprs2.net",
+      "port": 14580,
+      "name": "T2PR — puertorico.aprs2.net"
+    },
+    {
+      "host": "portugal.aprs2.net",
+      "port": 14580,
+      "name": "T2PRT — portugal.aprs2.net"
+    },
+    {
+      "host": "quebec.aprs2.net",
+      "port": 14580,
+      "name": "T2QUEBEC — quebec.aprs2.net"
+    },
+    {
+      "host": "radom.aprs2.net",
+      "port": 14580,
+      "name": "T2RADOM — radom.aprs2.net"
+    },
+    {
+      "host": "rdu.aprs2.net",
+      "port": 14580,
+      "name": "T2RDU — rdu.aprs2.net"
+    },
+    {
+      "host": "romania.aprs2.net",
+      "port": 14580,
+      "name": "T2ROMANIA — romania.aprs2.net"
+    },
+    {
+      "host": "satgates-de1.aprs2.net",
+      "port": 14580,
+      "name": "T2SATGDE1 — satgates-de1.aprs2.net"
+    },
+    {
+      "host": "satgates-fi1.aprs2.net",
+      "port": 14580,
+      "name": "T2SATGFI1 — satgates-fi1.aprs2.net"
+    },
+    {
+      "host": "satgates-us1.aprs2.net",
+      "port": 14580,
+      "name": "T2SATGUS1 — satgates-us1.aprs2.net"
+    },
+    {
+      "host": "sjc.aprs2.net",
+      "port": 14580,
+      "name": "T2SJC — sjc.aprs2.net"
+    },
+    {
+      "host": "spain.aprs2.net",
+      "port": 14580,
+      "name": "T2SPAIN — spain.aprs2.net"
+    },
+    {
+      "host": "spain2.aprs2.net",
+      "port": 14580,
+      "name": "T2SPAIN2 — spain2.aprs2.net"
+    },
+    {
+      "host": "t2stras.aprs2.net",
+      "port": 14580,
+      "name": "T2STRAS — t2stras.aprs2.net"
+    },
+    {
+      "host": "sweden.aprs2.net",
+      "port": 14580,
+      "name": "T2SWEDEN — sweden.aprs2.net"
+    },
+    {
+      "host": "swiss1.aprs2.net",
+      "port": 14580,
+      "name": "T2SWISS1 — swiss1.aprs2.net"
+    },
+    {
+      "host": "sydney.aprs2.net",
+      "port": 14580,
+      "name": "T2SYDNEY — sydney.aprs2.net"
+    },
+    {
+      "host": "taipei.aprs2.net",
+      "port": 14580,
+      "name": "T2TAIPEI — taipei.aprs2.net"
+    },
+    {
+      "host": "taiwan.aprs2.net",
+      "port": 14580,
+      "name": "T2TAIWAN — taiwan.aprs2.net"
+    },
+    {
+      "host": "tasmania.aprs2.net",
+      "port": 14580,
+      "name": "T2TAS — tasmania.aprs2.net"
+    },
+    {
+      "host": "texas.aprs2.net",
+      "port": 14580,
+      "name": "T2TEXAS — texas.aprs2.net"
+    },
+    {
+      "host": "tokyo.aprs2.net",
+      "port": 14580,
+      "name": "T2TOKYO — tokyo.aprs2.net"
+    },
+    {
+      "host": "turkiye.aprs2.net",
+      "port": 14580,
+      "name": "T2TURKIYE — turkiye.aprs2.net"
+    },
+    {
+      "host": "uk.aprs2.net",
+      "port": 14580,
+      "name": "T2UK — uk.aprs2.net"
+    },
+    {
+      "host": "ukraine.aprs2.net",
+      "port": 14580,
+      "name": "T2UKRAINE — ukraine.aprs2.net"
+    },
+    {
+      "host": "northeast.aprs2.net",
+      "port": 14580,
+      "name": "T2USANE — northeast.aprs2.net"
+    },
+    {
+      "host": "northwest.aprs2.net",
+      "port": 14580,
+      "name": "T2USANW — northwest.aprs2.net"
+    },
+    {
+      "host": "vancouver.aprs2.net",
+      "port": 14580,
+      "name": "T2VAN — vancouver.aprs2.net"
+    },
+    {
+      "host": "yantai.aprs2.net",
+      "port": 14580,
+      "name": "T2YANTAI — yantai.aprs2.net"
+    },
+    {
+      "host": "aprsnz.aprs2.net",
+      "port": 14580,
+      "name": "T2ZL — aprsnz.aprs2.net"
+    },
+    {
+      "host": "third.aprs.net",
+      "port": 14580,
+      "name": "THIRD — third.aprs.net"
+    },
+    {
+      "host": "srvr.aprs-is.net",
+      "port": 14580,
+      "name": "srvr.aprs-is.net"
+    },
+    {
+      "host": "ametx.com",
+      "port": 14580,
+      "name": "ametx.com"
+    },
+    {
+      "host": "firenet.us",
+      "port": 14580,
+      "name": "firenet.us"
+    },
+    {
+      "host": "firenet.aprs2.net",
+      "port": 14580,
+      "name": "firenet.aprs2.net"
+    }
+  ]
+}
