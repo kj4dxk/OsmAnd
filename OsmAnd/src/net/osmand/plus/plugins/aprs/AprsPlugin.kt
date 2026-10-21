@@ -154,8 +154,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
         val selectedPreset = presets.indexOfFirst { it.getString("host") == savedHost && it.getInt("port") == savedPort }
         val server = Spinner(activity).apply {
             adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
-                listOf(app.getString(R.string.aprs_custom_server)) + presets.map { it.getString("name") })
-            setSelection(if (selectedPreset >= 0) selectedPreset + 1 else 0)
+                presets.map { it.getString("name") } + app.getString(R.string.aprs_custom_server))
+            setSelection(if (selectedPreset >= 0) selectedPreset else presets.size)
         }
         content.addView(server)
         val custom = field(R.string.aprs_custom_url, "custom_server", "", InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI)
@@ -173,8 +173,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
         server.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                custom.isEnabled = position == 0
-                if (position > 0) port.setText(presets[position - 1].getInt("port").toString())
+                custom.isEnabled = position == presets.size
+                if (position < presets.size) port.setText(presets[position].getInt("port").toString())
             }
         }
         custom.isEnabled = selectedPreset < 0
@@ -192,8 +192,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
                 val call = AprsIdentity.callsign(callsign.text.toString(), ssid.selectedItemPosition)
                 val code = passcode.text.toString().trim().ifBlank { "-1" }
                 val portValue = port.text.toString().toIntOrNull() ?: 0
-                val endpoint = if (server.selectedItemPosition > 0) {
-                    AprsEndpoint.parse(presets[server.selectedItemPosition - 1].getString("host"), portValue)
+                val endpoint = if (server.selectedItemPosition < presets.size) {
+                    AprsEndpoint.parse(presets[server.selectedItemPosition].getString("host"), portValue)
                 } else AprsEndpoint.parse(custom.text.toString(), portValue)
                 AprsIsConfig(call, code, endpoint.host, endpoint.port, 0.0, 0.0, beaconEnabled = beacon.isChecked)
                 preferences.edit().putString("callsign", call).putString("passcode", code)

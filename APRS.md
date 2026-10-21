@@ -1,7 +1,7 @@
-# APRS-IS preview
+# APRSISOSM
 
-The optional APRS-IS plugin adds a first Android integration of the shared APRS
-engine. Enable **APRS-IS** in OsmAnd's Plugins screen, then open **APRS-IS** from
+APRSISOSM is our OsmAnd-based Android project with a shared APRS engine.
+Enable **APRSISOSM** in the Plugins screen, then open **APRSISOSM** from
 the map menu. Enter your callsign/SSID and connect. Passcode `-1` is receive-only.
 GPS beaconing is off by default and requires a valid APRS-IS passcode plus server
 verification. The map location button enables OsmAnd's normal GPS handling.
@@ -12,18 +12,26 @@ passcode is masked. **Save without connecting** stores settings and stops any
 existing connection; **Connect** saves and opens the selected connection.
 
 The server selector defaults to `rotate.aprs2.net:14580`. Its bundled directory
-contains 107 endpoints checked on 2026-10-20: worldwide/regional/country pools,
-individual public servers, and the core/FireNet endpoints listed by APRS-IS.
-The snapshot comes from `https://status.aprs2.net/api/full` and the APRS-IS server
-directory. Internal hubs, monitoring pseudo-rotates, CWOP weather endpoints,
-and TLS-only rotates are excluded from this plaintext APRS client. Availability
-is not guaranteed by inclusion; the worldwide/regional Tier 2 pools are preferred.
+contains 12 presets checked on 2026-10-20, in practical priority order:
+`rotate.aprs2.net`, `noam.aprs2.net`, `euro.aprs2.net`, `asia.aprs2.net`,
+`aunz.aprs2.net`, `soam.aprs2.net`, `rotate.aprs.net`, `germany.aprs2.net`,
+`japan.aprs2.net`, `nordic.aprs2.net`, `swiss.aprs2.net`, `china.aprs2.net`.
+The official directories do not provide an audited popularity ranking; this order
+puts the recommended worldwide pool first, followed by major regional pools,
+the core fallback, and country pools. Sources are `https://status.aprs2.net/api/full`
+and `https://www.aprs-is.net/aprsservers.aspx`. Availability may change.
+Existing saved server selections are preserved; a removed preset becomes custom.
 
 Choose **Custom server…** to enter a hostname, `host:port`, `tcp://host:port`, or
 `aprs://host:port`. IPv6 literals use brackets, for example `tcp://[::1]:14580`.
 An explicit URL port overrides the separate port field. HTTP/HTTPS/WS/WSS,
 embedded credentials, URL paths, and query strings are rejected because this
 client currently implements APRS-IS over plaintext TCP only.
+
+The Gradle project, Android app label, menu entry, and plugin are named APRSISOSM.
+The universal phone preview build outputs `APRSISOSM.apk`; other variants use
+`APRSISOSM-<variant>.apk`. Internal upstream module/package names and plugin ID
+remain stable to preserve compatibility and installed settings.
 
 This preview connects only while the map is in the foreground. It disconnects
 when the map pauses and reconnects when it resumes if the connection was enabled.

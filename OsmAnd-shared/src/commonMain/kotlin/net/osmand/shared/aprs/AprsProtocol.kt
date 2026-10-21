@@ -25,7 +25,7 @@ object AprsProtocol {
         require(validCallsign(callsign))
         require(passcode == "-1" || passcode.matches(Regex("[0-9]{1,5}")))
         require(filter.length <= 160 && filter.all { it.code in 32..126 })
-        return "user $callsign pass $passcode vers OsmAndAPRS 0.1 filter $filter\r\n"
+        return "user $callsign pass $passcode vers APRSISOSM 0.1 filter $filter\r\n"
     }
 
     fun rangeFilter(latitude: Double, longitude: Double, radiusKm: Int): String {
@@ -38,7 +38,7 @@ object AprsProtocol {
         Regex("^#\\s*logresp\\s+${Regex.escape(callsign)}\\s+verified(?:,|\\s|$)",
             RegexOption.IGNORE_CASE).containsMatchIn(line)
 
-    fun beacon(callsign: String, fix: AprsFix, comment: String = "OsmAnd APRS",
+    fun beacon(callsign: String, fix: AprsFix, comment: String = "APRSISOSM",
                symbolTable: Char = '/', symbol: Char = '>'): String {
         require(validCallsign(callsign))
         require(symbolTable == '/' || symbolTable == '\\' || symbolTable in 'A'..'Z' || symbolTable in '0'..'9')

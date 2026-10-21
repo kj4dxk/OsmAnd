@@ -120,32 +120,32 @@ android {
 		nightlyFree {
 			dimension "version"
 			applicationId "net.osmand.dev"
-			resValue "string", "app_name", "OsmAnd Nightly"
+			resValue "string", "app_name", "APRSISOSM"
 			resValue "string", "app_edition", System.getenv("APP_EDITION") ? System.getenv("APP_EDITION") : ""
 			// resConfig "en"
 		}
 		androidFull {
 			dimension "version"
 			applicationId "net.osmand.plus"
-			resValue "string", "app_name", "OsmAnd~"
+			resValue "string", "app_name", "APRSISOSM"
 			resValue "string", "app_edition", System.getenv("APP_EDITION") ? System.getenv("APP_EDITION") : ""
 		}
 		gplayFree {
 			dimension "version"
 			applicationId "net.osmand"
-			resValue "string", "app_name", "OsmAnd"
+			resValue "string", "app_name", "APRSISOSM"
 			resValue "string", "app_edition", System.getenv("APP_EDITION") ? System.getenv("APP_EDITION") : ""
 		}
 		gplayFull {
 			dimension "version"
 			applicationId "net.osmand.plus"
-			resValue "string", "app_name", "OsmAnd+"
+			resValue "string", "app_name", "APRSISOSM"
 			resValue "string", "app_edition", System.getenv("APP_EDITION") ? System.getenv("APP_EDITION") : ""
 		}
 		huawei {
 			dimension "version"
 			applicationId "net.osmand.huawei"
-			resValue "string", "app_name", "OsmAnd"
+			resValue "string", "app_name", "APRSISOSM"
 			resValue "string", "app_edition", ""
 		}
 
@@ -173,6 +173,9 @@ android {
 
 	applicationVariants.configureEach {
 		def variant = it
+		variant.outputs.configureEach {
+			outputFileName = variant.name == 'nightlyFreeOpenglFatDebug' ? 'APRSISOSM.apk' : "APRSISOSM-${variant.name}.apk"
+		}
 		def taskName = variant.name.capitalize()
 		def mergeAssetsTaskName = "merge${taskName}Assets"
 		tasks.named(mergeAssetsTaskName).configure { osmandTask ->

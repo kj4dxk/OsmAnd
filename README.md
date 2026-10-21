@@ -1,5 +1,10 @@
-OsmAnd (OSM Automated Navigation Directions)
+APRSISOSM
 ------------
+APRSISOSM is an OsmAnd-based Android app with APRS-IS station mapping and GPS
+beaconing. See [APRSISOSM setup and behavior](APRS.md) for our integration.
+
+## Upstream OsmAnd (OSM Automated Navigation Directions)
+
 This project aims at providing comfortable map viewing and navigation (routing) application for mobile devices. Particular stress lies with complete offline features (via pre-loaded offline map data) or economic internet usage.
 To get started, continue with the basic description below, then find more detail on our Welcome Wiki Pages, the Project Homepage, or the OpenStreetMap OsmAnd Wiki Page.
 You are welcome to discuss any question regarding the project at the Google group OsmAnd. Please do not use comments on wiki pages because it is rather difficult to find them.

@@ -38,7 +38,7 @@ class AprsProtocolTest {
         }
     }
     @Test fun beaconWireFormat() {
-        assertEquals("N0CALL-9>APRS,TCPIP*:!4903.50N/07201.75W>OsmAnd APRS\r\n",
+        assertEquals("N0CALL-9>APRS,TCPIP*:!4903.50N/07201.75W>APRSISOSM\r\n",
             AprsProtocol.beacon("N0CALL-9", AprsFix(49 + 3.5 / 60, -(72 + 1.75 / 60), 0)))
     }
     @Test fun minuteCarryAndPoles() {

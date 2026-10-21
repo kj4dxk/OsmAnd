@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="aprs_name">APRS-IS</string>
+    <string name="aprs_name">APRSISOSM</string>
     <string name="aprs_description">View APRS stations and beacon GPS positions over APRS-IS while the map is open.</string>
     <string name="aprs_callsign">Callsign (for example KJ4DXK)</string>
     <string name="aprs_ssid">APRS dash code (SSID)</string>
