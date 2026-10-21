@@ -24,7 +24,11 @@ object AprsAppDefaults {
 
         for (plugin in PluginsHelper.getAvailablePlugins()) {
             val enabled = plugin is AprsPlugin || plugin is OsmandRasterMapsPlugin
-            PluginsHelper.enablePlugin(null, app, plugin, enabled)
+            if (plugin.isEnabled != enabled) {
+                if (!PluginsHelper.enablePlugin(null, app, plugin, enabled) && enabled) return false
+            } else {
+                settings.enablePlugin(plugin.id, enabled)
+            }
         }
 
         settings.USE_LAST_APPLICATION_MODE_BY_DEFAULT.set(false)
@@ -64,6 +68,7 @@ object AprsAppDefaults {
             Triple(ApplicationMode.PEDESTRIAN, "foot", R.string.aprs_route_walking),
             Triple(ApplicationMode.BICYCLE, "bike", R.string.aprs_route_cycling))
         for ((mode, vehicle, label) in routes) {
+            ApplicationMode.changeProfileAvailability(mode, true, app)
             val key = OnlineRoutingEngine.ONLINE_ROUTING_ENGINE_PREFIX + "aprsisosm_" + vehicle
             val engine = OsrmEngine(mapOf(
                 EngineParameter.KEY.name to key,

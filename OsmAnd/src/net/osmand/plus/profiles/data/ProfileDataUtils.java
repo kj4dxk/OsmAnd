@@ -29,7 +29,7 @@ public class ProfileDataUtils {
 	public static String getAppModeDescription(Context ctx, ApplicationMode mode) {
 		return mode.isCustomProfile() ?
 				ctx.getString(R.string.profile_type_user_string) :
-				ctx.getString(R.string.profile_type_osmand_string);
+				ctx.getString(R.string.aprs_name);
 	}
 
 

@@ -64,9 +64,8 @@ live updates, cloud backup, or weather. Their proprietary service URLs are not
 redirected to unrelated raster/routing APIs. Existing upstream backend source is
 retained for reference, not replaced with a nonfunctional imitation.
 
-This source-only change was checked with XML parsing, source/diff review, and HTTP
-200 responses from the PC's viewer, setup, and monitor pages. No APK was rebuilt
-and no new Android runtime verification was performed.
+XML/resource and source checks passed. A universal Android phone APK has now been
+built and installed on a freshly reset S26 Android 16 emulator for runtime review.
 
 ## Initial setup and defaults
 
@@ -104,8 +103,10 @@ user changes. Failed tile-source installation leaves the marker unset for retry.
 
 The launcher/application labels and splash-screen app title use **APRSISOSM**.
 The upstream Android package IDs remain stable so existing installs can update.
-The already-exported APK still has its old first-run flow/name until a new build
-is requested. Initial setup/default changes have only been checked at source level.
+The phone APK is named `APRSISOSM.apk`. Fresh-install runtime review confirmed the
+PC main source, off overlay/underlay, three OSRM engines, Driving startup profile,
+required plugin states, privacy settings, and removed backup menus. Plugin setup
+avoids reinitializing plugins already in their requested state.
 
 ### Checklist decisions
 
@@ -132,10 +133,10 @@ References: [Online Maps](https://osmand.net/docs/user/plugins/online-map/),
 Source verification passed XML/resource-reference and whitespace checks. Public
 `/osmand-setup.html` returned HTTP 200; `/api/search` and a sample `/osmand/route/v1/car/`
 request returned HTTP 503 while the PC monitor reported routing graph creation and
-search waiting. Neither those responses nor source checks establish Android runtime
-success. The next authorized build must be installed and tested for first launch,
-PC raster display, APRS markers over the main raster, GPS permissions, Photon search,
-all three routing modes, voice, and both Wi-Fi/cellular access when services are ready.
+search waiting. The S26 runtime review confirmed fresh launch, PC raster display,
+APRS markers over the main raster, and GPS delivery. End-to-end Photon search,
+all three routing modes, voice during navigation, and physical-phone Wi-Fi/cellular
+tests remain pending service readiness and phone testing.
 
 This preview connects only while the map is in the foreground. It disconnects
 when the map pauses and reconnects when it resumes if the connection was enabled.
@@ -180,7 +181,13 @@ to public APRS-IS.
 The initial checkpoint passed 14 APRS tests and an Android debug build. On the
 S26 Android 16 emulator, a local receive-only server supplied a test station;
 the settings count, map marker, callsign label, and station details were checked.
-Live GPS beaconing to public APRS-IS and physical-phone testing remain unverified.
+The current checkpoint passed 17 APRS tests and 2,407 core tests (37 skipped), with
+zero failures/errors, plus a universal Android debug build. A user-authorized live
+test injected a fresh ZIP-code representative GPS fix on the emulator. The app
+reported verified login; its position beacon entered a Tier 2 server and was seen
+on a separate core-server receive-only connection. The app was disconnected after
+the test and its temporary credentials cleared. The final branding-only rebuild
+was installed and checked again. Physical-phone testing remains unverified.
 
 Reference behavior: [APRSISMO](https://github.com/APRSFoundation/APRSISMO).
 Protocol references: [APRS-IS connections](https://www.aprs-is.net/Connecting.aspx)
