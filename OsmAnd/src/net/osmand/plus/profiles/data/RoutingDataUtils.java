@@ -58,7 +58,7 @@ public class RoutingDataUtils {
 		List<ProfilesGroup> result = new ArrayList<>();
 		Map<String, RoutingFile> routingFiles = getOfflineRoutingFilesByNames();
 
-		ProfilesGroup profilesGroup = createProfilesGroup(getString(R.string.app_name_osmand), routingFiles.remove(OSMAND_NAVIGATION));
+		ProfilesGroup profilesGroup = createProfilesGroup(getString(R.string.app_name), routingFiles.remove(OSMAND_NAVIGATION));
 		if (profilesGroup != null) {
 			result.add(profilesGroup);
 		}

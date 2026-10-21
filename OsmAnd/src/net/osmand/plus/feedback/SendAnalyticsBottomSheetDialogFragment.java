@@ -151,21 +151,6 @@ public class SendAnalyticsBottomSheetDialogFragment extends MenuBottomSheetDialo
 	}
 
 	public static boolean shouldShowDialog(@NonNull OsmandApplication app) {
-		OsmandSettings settings = app.getSettings();
-		if (app.getAppCustomization().isFeatureEnabled(FRAGMENT_SEND_ANALYTICS_ID)) {
-			int requestsCount = settings.SEND_ANONYMOUS_DATA_REQUESTS_COUNT.get();
-			long firstInstalledDays = app.getAppInitializer().getFirstInstalledDays();
-			boolean requestProcessed = settings.SEND_ANONYMOUS_DATA_REQUEST_PROCESSED.get();
-			if (!requestProcessed && firstInstalledDays >= 5 && firstInstalledDays <= 30 && requestsCount < 3) {
-				if (requestsCount == 0) {
-					return true;
-				} else {
-					int numberOfStarts = app.getAppInitializer().getNumberOfStarts();
-					int lastRequestNS = settings.SEND_ANONYMOUS_DATA_LAST_REQUEST_NS.get();
-					return numberOfStarts - lastRequestNS > 2;
-				}
-			}
-		}
 		return false;
 	}
 

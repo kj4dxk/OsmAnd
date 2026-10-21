@@ -103,6 +103,11 @@ public class OsmandRasterMapsPlugin extends OsmandPlugin {
 	}
 
 	@Override
+	public boolean isEnableByDefault() {
+		return true;
+	}
+
+	@Override
 	public CharSequence getDescription(boolean linksEnabled) {
 		return app.getString(R.string.osmand_rastermaps_plugin_description);
 	}

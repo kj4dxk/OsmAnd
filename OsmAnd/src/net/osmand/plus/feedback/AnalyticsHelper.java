@@ -196,20 +196,6 @@ public class AnalyticsHelper extends SQLiteOpenHelper {
 	}
 
 	public boolean submitCollectedDataAsync() {
-		if (app.getSettings().isInternetConnectionAvailable()) {
-			List<Integer> allowedTypes = new ArrayList<>();
-			if (app.getSettings().SEND_ANONYMOUS_MAP_DOWNLOADS_DATA.get()) {
-				allowedTypes.add(EVENT_TYPE_MAP_DOWNLOAD);
-			}
-			if (app.getSettings().SEND_ANONYMOUS_APP_USAGE_DATA.get()) {
-				allowedTypes.add(EVENT_TYPE_APP_USAGE);
-			}
-			if (!allowedTypes.isEmpty() && isParcelReady(allowedTypes)
-					&& (submittingTask == null || submittingTask.isDone())) {
-				submittingTask = executor.submit(() -> submitCollectedData(allowedTypes));
-				return true;
-			}
-		}
 		return false;
 	}
 
@@ -384,15 +370,7 @@ public class AnalyticsHelper extends SQLiteOpenHelper {
 	}
 
 	public void addEvent(@NonNull String event, @EventType int type) {
-		long date = System.currentTimeMillis();
-		// events come from the main thread too, keep SQLite off it
-		executor.execute(() -> {
-			try {
-				insertEvent(date, event, type);
-			} catch (Exception e) {
-				LOG.error(e);
-			}
-		});
+		// Analytics collection is disabled in APRSISOSM.
 	}
 
 	private void insertEvent(long date, @NonNull String event, @EventType int type) {

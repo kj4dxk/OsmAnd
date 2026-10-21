@@ -549,7 +549,7 @@ public class MultimediaNotesFragment extends BaseSettingsFragment implements Cop
 
 	@NonNull
 	private String getCameraAppTitle(boolean useSystemApp) {
-		return getString(useSystemApp ? R.string.system_locale : R.string.app_name_osmand);
+		return getString(useSystemApp ? R.string.system_locale : R.string.app_name);
 	}
 
 	private Camera openCamera() {

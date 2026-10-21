@@ -145,7 +145,7 @@ public class RearrangeItemHolder extends ViewHolder implements UnmovableItem {
 	@StringRes
 	private static int getDescription(@Nullable String id) {
 		if (Algorithms.isEmpty(id)) {
-			return R.string.app_name_osmand;
+			return R.string.app_name;
 		}
 		switch (id) {
 			case DRAWER_FAVORITES_ID:
@@ -184,7 +184,7 @@ public class RearrangeItemHolder extends ViewHolder implements UnmovableItem {
 			case DRAWER_DIVIDER_ID:
 				return R.string.divider_descr;
 			default:
-				return R.string.app_name_osmand;
+				return R.string.app_name;
 		}
 	}
 }

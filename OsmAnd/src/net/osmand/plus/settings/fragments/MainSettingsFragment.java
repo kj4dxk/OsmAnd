@@ -70,7 +70,6 @@ public class MainSettingsFragment extends BaseSettingsFragment implements OnSele
 		availableAppModes = new LinkedHashSet<>(ApplicationMode.values(app));
 		Preference globalSettings = requirePreference("global_settings");
 		globalSettings.setIcon(getContentIcon(R.drawable.ic_action_settings));
-		setupBackupAndRestorePref();
 		Preference purchasesSettings = requirePreference(PURCHASES_SETTINGS);
 		purchasesSettings.setTitle(R.string.aprs_services_title);
 		purchasesSettings.setSummary(R.string.aprs_services_description);
@@ -82,7 +81,6 @@ public class MainSettingsFragment extends BaseSettingsFragment implements OnSele
 		appProfiles.setIconSpaceReserved(false);
 		setupAppProfiles(appProfiles);
 		profileManagementPref();
-		setupLocalBackup();
 	}
 
 	@Override
@@ -191,10 +189,8 @@ public class MainSettingsFragment extends BaseSettingsFragment implements OnSele
 	}
 
 	private void setupBackupAndRestorePref() {
-		Preference backupSettings = findPreference(BACKUP_AND_RESTORE);
-		backupSettings.setTitle(R.string.aprs_local_backup);
-		backupSettings.setSummary(R.string.aprs_local_backup_description);
-		backupSettings.setIcon(getContentIcon(R.drawable.ic_action_read_from_file));
+		Preference preference = findPreference(BACKUP_AND_RESTORE);
+		if (preference != null) preference.setVisible(false);
 	}
 
 	private void profileManagementPref() {

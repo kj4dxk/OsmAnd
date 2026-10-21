@@ -39,8 +39,8 @@ remain stable to preserve compatibility and installed settings.
 purchase actions, paid-plugin acquisition, cloud enrollment, and Live Updates
 entry points. It is also available from the map menu when APRSISOSM is enabled.
 Upstream billing initialization, inventory validation, automatic sales promotions,
-and automatic OsmAnd cloud backups are disabled. Local file backup/export remains
-available in Settings. Feature entitlement flags are not forged; unavailable
+and automatic OsmAnd cloud backups are disabled. Cloud and local backup entries
+are removed from Settings and the map drawer. Feature entitlement flags are not forged; unavailable
 features lead to the services information instead of payment.
 
 The user's **OSM** chat and the PC's Nginx configuration/phone setup guide confirm
@@ -54,9 +54,11 @@ these HTTP endpoints:
 - Photon search: `http://pdeffenb.homeip.net:82/api/search`
 
 The services screen opens the viewer/setup/monitor and copies the tile/routing
-addresses for configuration. It does not silently change existing map sources or
-navigation profiles. Search is available in the PC viewer; this change does not
-add a native Photon search provider. Worldwide data may still be building.
+addresses. The PC defaults described below configure map and navigation profiles.
+The map search button and map drawer search use a native Photon destination dialog;
+choosing a result sets the destination and opens route planning. Other specialized
+searches (such as POI categories within route planning) remain upstream interfaces.
+Worldwide data may still be building.
 There is no compatible PC service for OsmAnd OBF/vector downloads, incremental
 live updates, cloud backup, or weather. Their proprietary service URLs are not
 redirected to unrelated raster/routing APIs. Existing upstream backend source is
@@ -65,6 +67,75 @@ retained for reference, not replaced with a nonfunctional imitation.
 This source-only change was checked with XML parsing, source/diff review, and HTTP
 200 responses from the PC's viewer, setup, and monitor pages. No APK was rebuilt
 and no new Android runtime verification was performed.
+
+## Initial setup and defaults
+
+The initial region-download wizard is replaced with **Welcome to APRSISOSM**.
+It describes the PC services and opens the configured map; it does not locate a
+region by IP, request the OsmAnd download catalog, or start region downloads.
+Map/route defaults are installed on the first map activity launch, including an
+upgrade from the earlier preview. A versioned marker prevents overwriting later
+user changes. Failed tile-source installation leaves the marker unset for retry.
+
+- APRSISOSM plugin: on; connection and GPS beaconing still require explicit setup.
+- Online Maps plugin: on.
+- All other plugins, including Weather, Topography (SRTM), Wikipedia, Trip Recording,
+  street imagery, and development tools: off.
+- Map tiles: `http://pdeffenb.homeip.net:82/raster/light/{z}/{x}/{y}.png`, zoom 0–18.
+  Zoom 18 is a viewing limit, not a claim of native archive detail at that zoom.
+- **pdeffenb PC maps** is the main map source in each existing profile; overlay
+  and underlay are off. No main-raster restriction was found in the checked-out
+  `MapActions.onNavigationClick` or OSRM route-start path. Runtime validation remains
+  required before treating navigation on this configuration as confirmed.
+- Driving, Walking, Cycling: separate OSRM-compatible engines with the base URL
+  `http://pdeffenb.homeip.net:82/osmand/route/v1/` and respective `car`, `foot`,
+  `bike` modes. No API key, GPX approximation, or external routing fallback.
+- Other routing profiles retain their original routing engines.
+- Driving is the startup/default profile; Driving, Walking, and Cycling remain available.
+- Analytics collection and upload, identifier sharing, and local search/navigation/
+  marker history: off. Existing saved history is not deleted.
+- Startup messages, suggested downloads, analytics requests, rating prompts,
+  release notes, automatic backup and Android system app backup: disabled.
+- Speed-camera data is marked uninstalled; map/voice warnings and camera settings
+  are disabled/removed. This cannot remove a symbol baked into a PC-rendered tile.
+- Built-in TTS in the phone's supported language is selected and unmuted for the
+  three navigation profiles, using bundled voice assets. Android's TTS engine and
+  precise location permissions remain phone-managed.
+
+The launcher/application labels and splash-screen app title use **APRSISOSM**.
+The upstream Android package IDs remain stable so existing installs can update.
+The already-exported APK still has its old first-run flow/name until a new build
+is requested. Initial setup/default changes have only been checked at source level.
+
+### Checklist decisions
+
+The supplied stock-OsmAnd setup checklist was reconciled with the fork as follows:
+
+| Checklist item | APRSISOSM decision |
+| --- | --- |
+| Install official OsmAnd | Install our APRSISOSM APK; retain upstream attribution/package compatibility. |
+| Only Online Maps enabled | Enable APRSISOSM as well; disable all other optional plugins by default. |
+| Vector base with opaque overlay | Keep the explicitly requested PC main map and no overlay/underlay. Verify navigation on the next build. |
+| SQLiteDB cache | Keep the built-in file-per-tile cache used by the source installer, with no expiry. Both support cached tiles; no storage-format migration is needed. |
+| Zoom 18 | Set maximum source zoom 18; the PC renderer may overzoom lower native detail. |
+| OSRM car/foot/bike, blank API key | Installed and selected automatically; no GPX approximation or public-server fallback. |
+| Search not redirected | Main map/drawer search is now connected to Photon; specialized offline search screens are separate. |
+| Optional local history | Default off for privacy, independently of analytics. |
+| Export configuration backup | Omitted because the later explicit request removes backup options entirely. Configuration lives in source/GitHub. |
+| Permissions/notifications | Retain precise location prompts and essential navigation notifications; camera/microphone/contacts are not requested by our integration. |
+| Prefetch tiles | Leave manual to avoid automatic large downloads; cached tiles do not provide offline routing. |
+| Test Wi-Fi/cellular | Still required after rebuilding and after the PC graph/search services are ready. |
+
+References: [Online Maps](https://osmand.net/docs/user/plugins/online-map/),
+[raster maps and caching](https://osmand.net/docs/user/map/raster-maps/).
+
+Source verification passed XML/resource-reference and whitespace checks. Public
+`/osmand-setup.html` returned HTTP 200; `/api/search` and a sample `/osmand/route/v1/car/`
+request returned HTTP 503 while the PC monitor reported routing graph creation and
+search waiting. Neither those responses nor source checks establish Android runtime
+success. The next authorized build must be installed and tested for first launch,
+PC raster display, APRS markers over the main raster, GPS permissions, Photon search,
+all three routing modes, voice, and both Wi-Fi/cellular access when services are ready.
 
 This preview connects only while the map is in the foreground. It disconnects
 when the map pauses and reconnects when it resumes if the connection was enabled.

@@ -44,6 +44,7 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     private var foreground = false
 
     override fun getId() = "osmand.aprs"
+    override fun isEnableByDefault() = true
     override fun getName(): String = app.getString(R.string.aprs_name)
     override fun getDescription(linksEnabled: Boolean): CharSequence = app.getString(R.string.aprs_description)
     override fun getLogoResourceId() = R.drawable.ic_action_sensor

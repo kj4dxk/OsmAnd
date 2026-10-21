@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:title="@string/osmand_settings">
+	android:title="@string/aprs_general_settings">
 
 	<Preference
 		android:icon="@drawable/ic_world_globe_dark"
@@ -124,28 +124,8 @@
 		android:title="@string/location_source"
 		tools:icon="@drawable/ic_action_device_location" />
 
-	<net.osmand.plus.settings.preferences.SwitchPreferenceEx
-		android:key="auto_backup_enabled"
-		android:layout="@layout/preference_with_descr_dialog_and_switch"
-		android:summaryOff="@string/shared_string_off"
-		android:summaryOn="@string/shared_string_on"
-		android:title="@string/auto_backup_title"
-		tools:icon="@drawable/ic_action_android" />
-
 	<Preference
 		android:layout="@layout/simple_divider_item"
 		android:selectable="false" />
-
-	<PreferenceCategory
-		android:key="legal"
-		android:layout="@layout/preference_category_with_descr"
-		android:title="@string/shared_string_legal" />
-
-	<Preference
-		android:key="speed_cameras_uninstalled"
-		android:layout="@layout/preference_with_descr"
-		android:persistent="false"
-		tools:icon="@drawable/ic_speed_camera_disabled"
-		tools:title="@string/uninstall_speed_cameras" />
 
 </PreferenceScreen>

@@ -459,25 +459,12 @@ public class MapActivityActions extends MapActions {
 					R.drawable.ic_action_folder_osm_notes, DRAWER_OSM_EDITS_ID);
 		}
 
-		adapter.addItem(new ContextMenuItem(DRAWER_BACKUP_RESTORE_ID)
-				.setTitleId(R.string.backup_and_restore, activity)
-				.setIcon(R.drawable.ic_action_cloud_upload)
-				.setListener((uiAdapter, view, item, isChecked) -> {
-					app.logEvent("drawer_backup_restore_open");
-					if (app.getBackupHelper().isRegistered()) {
-						BackupCloudFragment.showInstance(activity.getSupportFragmentManager());
-					} else {
-						BackupAuthorizationFragment.showInstance(activity.getSupportFragmentManager());
-					}
-					return true;
-				}));
-
 		adapter.addItem(new ContextMenuItem(DRAWER_SEARCH_ID)
 				.setTitleId(R.string.search_button, activity)
 				.setIcon(R.drawable.ic_action_search_dark)
 				.setListener((uiAdapter, view, item, isChecked) -> {
 					app.logEvent("drawer_search_open");
-					activity.getFragmentsHelper().showQuickSearch(ShowQuickSearchMode.NEW_IF_EXPIRED, false);
+					net.osmand.plus.plugins.aprs.AprsPcSearch.show(activity);
 					return true;
 				}));
 
@@ -513,29 +500,11 @@ public class MapActivityActions extends MapActions {
 					return false;
 				}));
 
-		String d = getString(R.string.maps_and_resources);
-		if (app.getDownloadThread().getIndexes().isDownloadedFromInternet) {
-			List<IndexItem> items = app.getDownloadThread().getIndexes().getOutdatedItems().activated();
-			if (!Algorithms.isEmpty(items)) {
-				d += " (" + items.size() + ")";
-			}
-		}
 		adapter.addItem(new ContextMenuItem(DRAWER_DOWNLOAD_MAPS_ID)
-				.setTitleId(R.string.maps_and_resources, null)
-				.setTitle(d).setIcon(R.drawable.ic_type_archive)
+				.setTitleId(R.string.aprs_pc_map_source, activity)
+				.setIcon(R.drawable.ic_type_archive)
 				.setListener((uiAdapter, view, item, isChecked) -> {
-					app.logEvent("drawer_download_maps_open");
-					Intent newIntent = new Intent(activity, app.getAppCustomization().getDownloadActivity());
-					newIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-					activity.startActivity(newIntent);
-					return true;
-				}));
-
-		adapter.addItem(new ContextMenuItem(DRAWER_LIVE_UPDATES_ID)
-				.setTitleId(R.string.live_updates, activity)
-				.setIcon(R.drawable.ic_action_map_update)
-				.setListener((uiAdapter, view, item, isChecked) -> {
-					LiveUpdatesFragment.showInstance(activity.getSupportFragmentManager(), null);
+					net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 					return true;
 				}));
 

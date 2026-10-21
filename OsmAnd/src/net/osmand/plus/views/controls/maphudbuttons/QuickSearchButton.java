@@ -31,7 +31,7 @@ public class QuickSearchButton extends MapButton {
 		setOnClickListener(v -> {
 			MapFragmentsHelper fragmentsHelper = mapActivity.getFragmentsHelper();
 			fragmentsHelper.dismissCardDialog();
-			fragmentsHelper.showQuickSearch(NEW_IF_EXPIRED, false);
+			net.osmand.plus.plugins.aprs.AprsPcSearch.show(mapActivity);
 		});
 	}
 

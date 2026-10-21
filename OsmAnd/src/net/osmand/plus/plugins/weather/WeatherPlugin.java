@@ -203,7 +203,7 @@ public class WeatherPlugin extends OsmandPlugin {
 
 	@Override
 	public boolean isEnableByDefault() {
-		return !Version.isHMDBuild();
+		return false;
 	}
 
 	@Override

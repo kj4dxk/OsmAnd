@@ -64,8 +64,6 @@ public class GlobalSettingsFragment extends BaseSettingsFragment
 		setupHistoryPref();
 		setupEnableProxyPref();
 		setupLocationSourcePref();
-		setupAutoBackupPref();
-		setupUninstallSpeedCamerasPref();
 	}
 
 	@Override

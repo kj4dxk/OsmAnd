@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <string name="aprs_pc_map_source" translatable="false">pdeffenb PC maps</string>
+    <string name="aprs_search_title">Search your PC map</string>
+    <string name="aprs_search_hint">Address or place name</string>
+    <string name="aprs_search_loading">Searching your PC…</string>
+    <string name="aprs_search_empty">No places found on your PC.</string>
+    <string name="aprs_search_destination">Choose destination</string>
+    <string name="aprs_search_unavailable">PC search is unavailable or still preparing. Check the server monitor and connection.</string>
+    <string name="aprs_general_settings">APRSISOSM settings</string>
+    <string name="aprs_route_driving">APRSISOSM PC Driving</string>
+    <string name="aprs_route_walking">APRSISOSM PC Walking</string>
+    <string name="aprs_route_cycling">APRSISOSM PC Cycling</string>
+    <string name="aprs_welcome">Welcome to APRSISOSM</string>
+    <string name="aprs_pc_setup_description">Your PC map tiles are selected by default. Driving, Walking, and Cycling use your PC routing server. The PC must be reachable over the internet or your home network. Worldwide data may still be preparing; check the server monitor. APRSISOSM and Online Maps are enabled; Weather, Topography, and Wikipedia are off.</string>
+    <string name="aprs_pc_setup_continue">Open map</string>
+    <string name="aprs_pc_setup_error">Could not install the PC map source. Check app storage permissions and reopen the app.</string>
     <string name="aprs_services_title">APRSISOSM services</string>
     <string name="aprs_local_backup">Backup options</string>
     <string name="aprs_local_backup_description">Use file export/import below. PC cloud backup is not configured.</string>
-    <string name="aprs_services_description">Maps, address search, and route calculations are hosted on your PC. Open the setup guide to connect the app. No purchase is required from this screen.</string>
+    <string name="aprs_services_description">Maps, address search, and route calculations use your PC by default. The setup guide and server monitor are available below. No purchase is required.</string>
     <string name="aprs_services_map">Open PC map and search</string>
     <string name="aprs_services_setup">Open phone setup guide</string>
     <string name="aprs_services_monitor">Open server build monitor</string>
     <string name="aprs_services_copy_tiles">Copy map tile address</string>
     <string name="aprs_services_copy_routing">Copy routing address</string>
     <string name="aprs_address_copied">Server address copied</string>
-    <string name="aprs_services_unavailable">Your PC currently provides raster map tiles, Photon search, and Valhalla routing. Worldwide data may still be preparing; check the monitor. It does not provide OsmAnd vector-map downloads, incremental Live Updates, cloud backup, or weather. Use local file export/import for backups.</string>
+    <string name="aprs_services_unavailable">Your PC currently provides raster map tiles, Photon search, and Valhalla routing. Worldwide data may still be preparing; check the monitor. It does not provide OsmAnd vector-map downloads, incremental Live Updates, cloud backup, or weather.</string>
     <string name="aprs_services_feature_notice">See APRSISOSM services for availability on your PC.</string>
     <string name="aprs_name">APRSISOSM</string>
     <string name="aprs_description">View APRS stations and beacon GPS positions over APRS-IS while the map is open.</string>

@@ -1490,8 +1490,8 @@ public class OsmandSettings {
 		PRECISE_DISTANCE_NUMBERS.setModeDefaultValue(ApplicationMode.CAR, false);
 	}
 
-	public final OsmandPreference<Boolean> DO_NOT_SHOW_STARTUP_MESSAGES = new BooleanPreference(this, "do_not_show_startup_messages", false).makeGlobal().makeShared().cache();
-	public final OsmandPreference<Boolean> SHOW_SUGGEST_MAP_DIALOG = new BooleanPreference(this, "show_download_map_dialog", true).makeGlobal().makeShared().cache();
+	public final OsmandPreference<Boolean> DO_NOT_SHOW_STARTUP_MESSAGES = new BooleanPreference(this, "do_not_show_startup_messages", true).makeGlobal().makeShared().cache();
+	public final OsmandPreference<Boolean> SHOW_SUGGEST_MAP_DIALOG = new BooleanPreference(this, "show_download_map_dialog", false).makeGlobal().makeShared().cache();
 	public final OsmandPreference<Boolean> DO_NOT_USE_ANIMATIONS = new BooleanPreference(this, "do_not_use_animations", false).makeProfile().cache();
 
 	public final OsmandPreference<Boolean> SEND_ANONYMOUS_MAP_DOWNLOADS_DATA = new BooleanPreference(this, "send_anonymous_map_downloads_data", false).makeGlobal().makeShared().cache();
@@ -1511,7 +1511,7 @@ public class OsmandSettings {
 	// hash of the release notes the "What's new" dialog was already shown for
 	public final OsmandPreference<String> LAST_SHOWN_RELEASE_NOTES = new StringPreference(this, "last_shown_release_notes", "").makeGlobal();
 
-	public final OsmandPreference<Boolean> SEND_UNIQUE_USER_IDENTIFIER = new BooleanPreference(this, "send_unique_user_identifier", true).makeGlobal().cache();
+	public final OsmandPreference<Boolean> SEND_UNIQUE_USER_IDENTIFIER = new BooleanPreference(this, "send_unique_user_identifier", false).makeGlobal().cache();
 
 	public final CommonPreference<LocationSource> LOCATION_SOURCE = new EnumStringPreference<>(this, "location_source",
 			Version.isGooglePlayEnabled() ? GOOGLE_PLAY_SERVICES : ANDROID_API, LocationSource.values()).makeGlobal().makeShared();
@@ -1611,7 +1611,7 @@ public class OsmandSettings {
 	public final OsmandPreference<Long> BACKUP_LAST_DOWNLOADED_TIME = new LongPreference(this, "backup_last_downloaded_time", 0L).makeGlobal();
 	public final OsmandPreference<String> ITINERARY_LAST_CALCULATED_MD5 = new StringPreference(this, "itinerary_last_calculated_md5", "").makeGlobal();
 
-	public final OsmandPreference<Boolean> AUTO_BACKUP_ENABLED = new BooleanPreference(this, OsmandBackupAgent.AUTO_BACKUP_ENABLED, true).makeGlobal().makeShared();
+	public final OsmandPreference<Boolean> AUTO_BACKUP_ENABLED = new BooleanPreference(this, OsmandBackupAgent.AUTO_BACKUP_ENABLED, false).makeGlobal().makeShared();
 
 	public final CommonPreference<Long> LAST_AUTO_BACKUP_TIMESTAMP = registerLongPreference("last_auto_backup_timestamp", 0L).makeGlobal();
 	public final CommonPreference<Long> AUTO_BACKUP_INTERVAL_MS = registerLongPreference("auto_backup_interval_ms", DEFAULT_AUTO_BACKUP_INTERVAL_MS).makeGlobal();
@@ -1789,8 +1789,8 @@ public class OsmandSettings {
 	public final OsmandPreference<Boolean> SPEAK_GPS_SIGNAL_STATUS = new BooleanPreference(this, "speak_gps_signal_status", true).makeProfile().cache();
 	public final OsmandPreference<Boolean> SPEAK_ROUTE_DEVIATION = new BooleanPreference(this, "speak_route_deviation", true).makeProfile().cache();
 
-	public final OsmandPreference<Boolean> SPEED_CAMERAS_UNINSTALLED = new BooleanPreference(this, "speed_cameras_uninstalled", false).makeGlobal().makeShared();
-	public final OsmandPreference<Boolean> SPEED_CAMERAS_ALERT_SHOWED = new BooleanPreference(this, "speed_cameras_alert_showed", false).makeGlobal();
+	public final OsmandPreference<Boolean> SPEED_CAMERAS_UNINSTALLED = new BooleanPreference(this, "speed_cameras_uninstalled", true).makeGlobal().makeShared();
+	public final OsmandPreference<Boolean> SPEED_CAMERAS_ALERT_SHOWED = new BooleanPreference(this, "speed_cameras_alert_showed", true).makeGlobal();
 
 	public Set<String> getForbiddenTypes() {
 		Set<String> typeNames = new HashSet<>();
@@ -2209,9 +2209,9 @@ public class OsmandSettings {
 	public final OsmandPreference<Boolean> ROUTE_MAP_MARKERS_START_MY_LOC = new BooleanPreference(this, "route_map_markers_start_my_loc", false).makeGlobal().makeShared().cache();
 	public final OsmandPreference<Boolean> ROUTE_MAP_MARKERS_ROUND_TRIP = new BooleanPreference(this, "route_map_markers_round_trip", false).makeGlobal().makeShared().cache();
 
-	public final OsmandPreference<Boolean> SEARCH_HISTORY = new BooleanPreference(this, "search_history", true).makeGlobal().makeShared();
-	public final OsmandPreference<Boolean> NAVIGATION_HISTORY = new BooleanPreference(this, "navigation_history", true).makeGlobal().makeShared();
-	public final OsmandPreference<Boolean> MAP_MARKERS_HISTORY = new BooleanPreference(this, "map_markers_history", true).makeGlobal().makeShared();
+	public final OsmandPreference<Boolean> SEARCH_HISTORY = new BooleanPreference(this, "search_history", false).makeGlobal().makeShared();
+	public final OsmandPreference<Boolean> NAVIGATION_HISTORY = new BooleanPreference(this, "navigation_history", false).makeGlobal().makeShared();
+	public final OsmandPreference<Boolean> MAP_MARKERS_HISTORY = new BooleanPreference(this, "map_markers_history", false).makeGlobal().makeShared();
 
 	@NonNull
 	public ITileSource getMapTileSource(boolean warnWhenSelected) {

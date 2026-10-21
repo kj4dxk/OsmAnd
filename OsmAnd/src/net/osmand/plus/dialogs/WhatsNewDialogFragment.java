@@ -75,16 +75,7 @@ public class WhatsNewDialogFragment extends BaseAlertDialogFragment {
 	}
 
 	public static boolean shouldShowDialog(@NonNull OsmandApplication app) {
-		if (!app.getAppCustomization().isFeatureEnabled(FRAGMENT_WHATS_NEW_ID)) {
-			return false;
-		}
-		if (!app.getAppInitializer().checkAppVersionChanged() || !notShown) {
-			return false;
-		}
-		// nothing to tell about: no release notes for this version, or the same notes were already shown
-		String releaseNotes = getReleaseNotes(app);
-		return releaseNotes != null
-				&& !Algorithms.stringsEqual(getNotesKey(releaseNotes), app.getSettings().LAST_SHOWN_RELEASE_NOTES.get());
+		return false;
 	}
 
 	public static boolean showInstance(@NonNull FragmentManager fragmentManager, @NonNull OsmandApplication app) {

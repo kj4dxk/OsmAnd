@@ -77,30 +77,12 @@ public class SecondSplashScreenFragment extends BaseFullScreenFragment {
 			logoLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		}
 
-		ImageView text = new ImageView(activity);
+		android.widget.TextView text = new android.widget.TextView(activity);
 		text.setId(TEXT_ID);
 		int textColorId = ColorUtilities.getTertiaryTextColorId(nightMode);
-		if (Version.isFreeVersion(app)) {
-			if (InAppPurchaseUtils.isOsmAndProAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_pro, textColorId));
-			} else if (InAppPurchaseUtils.isMapsPlusAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_maps_plus, textColorId));
-			} else if (InAppPurchaseUtils.isLiveUpdatesAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_osmlive, textColorId));
-			} else if (InAppPurchaseUtils.isFullVersionAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_inapp, textColorId));
-			} else {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand, textColorId));
-			}
-		} else if (Version.isPaidVersion(app) || Version.isDeveloperVersion(app)) {
-			if (InAppPurchaseUtils.isOsmAndProAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_plus_pro, textColorId));
-			} else if (InAppPurchaseUtils.isLiveUpdatesAvailable(app)) {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_plus_osmlive, textColorId));
-			} else {
-				text.setImageDrawable(uiUtilities.getIcon(R.drawable.image_text_osmand_plus, textColorId));
-			}
-		}
+		text.setText(R.string.app_name);
+		text.setTextSize(30);
+		text.setTextColor(getColor(textColorId));
 		RelativeLayout.LayoutParams textLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		textLayoutParams.addRule(RelativeLayout.ABOVE, OSM_TEXT_ID);
 		textLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
