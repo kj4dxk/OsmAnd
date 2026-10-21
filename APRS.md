@@ -33,6 +33,39 @@ The universal phone preview build outputs `APRSISOSM.apk`; other variants use
 `APRSISOSM-<variant>.apk`. Internal upstream module/package names and plugin ID
 remain stable to preserve compatibility and installed settings.
 
+## PC services instead of purchase screens
+
+**APRSISOSM services** replaces the Maps+/Pro plan dialogs, purchase history and
+purchase actions, paid-plugin acquisition, cloud enrollment, and Live Updates
+entry points. It is also available from the map menu when APRSISOSM is enabled.
+Upstream billing initialization, inventory validation, automatic sales promotions,
+and automatic OsmAnd cloud backups are disabled. Local file backup/export remains
+available in Settings. Feature entitlement flags are not forged; unavailable
+features lead to the services information instead of payment.
+
+The user's **OSM** chat and the PC's Nginx configuration/phone setup guide confirm
+these HTTP endpoints:
+
+- Map and search viewer: `http://pdeffenb.homeip.net:82/raster.html`
+- Phone setup: `http://pdeffenb.homeip.net:82/osmand-setup.html`
+- Build monitor: `http://pdeffenb.homeip.net:82/monitor.html`
+- Raster tile template: `http://pdeffenb.homeip.net:82/raster/light/{z}/{x}/{y}.png`
+- OSRM-compatible Valhalla base: `http://pdeffenb.homeip.net:82/osmand/route/v1/`
+- Photon search: `http://pdeffenb.homeip.net:82/api/search`
+
+The services screen opens the viewer/setup/monitor and copies the tile/routing
+addresses for configuration. It does not silently change existing map sources or
+navigation profiles. Search is available in the PC viewer; this change does not
+add a native Photon search provider. Worldwide data may still be building.
+There is no compatible PC service for OsmAnd OBF/vector downloads, incremental
+live updates, cloud backup, or weather. Their proprietary service URLs are not
+redirected to unrelated raster/routing APIs. Existing upstream backend source is
+retained for reference, not replaced with a nonfunctional imitation.
+
+This source-only change was checked with XML parsing, source/diff review, and HTTP
+200 responses from the PC's viewer, setup, and monitor pages. No APK was rebuilt
+and no new Android runtime verification was performed.
+
 This preview connects only while the map is in the foreground. It disconnects
 when the map pauses and reconnects when it resumes if the connection was enabled.
 It does not yet implement an Android foreground service or background beaconing.

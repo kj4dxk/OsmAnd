@@ -14,11 +14,9 @@ public class ChoosePlanUtils {
 
 	public static void onGetPlugin(@Nullable FragmentActivity activity, @NonNull OsmandPlugin plugin) {
 		if (activity == null) return;
-
-		OsmAndFeature feature = plugin.getOsmAndFeature();
-		if (feature != null) {
-			ChoosePlanFragment.showInstance(activity, feature);
-		} else {
+		if (plugin.isPaid() || plugin.getOsmAndFeature() != null) {
+			net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
+		} else if (plugin.getInstallURL() != null) {
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(plugin.getInstallURL()));
 			AndroidUtils.startActivityIfSafe(activity, intent);
 		}

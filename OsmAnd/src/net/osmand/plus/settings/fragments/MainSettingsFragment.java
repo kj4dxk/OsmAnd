@@ -72,7 +72,9 @@ public class MainSettingsFragment extends BaseSettingsFragment implements OnSele
 		globalSettings.setIcon(getContentIcon(R.drawable.ic_action_settings));
 		setupBackupAndRestorePref();
 		Preference purchasesSettings = requirePreference(PURCHASES_SETTINGS);
-		purchasesSettings.setIcon(getContentIcon(R.drawable.ic_action_purchases));
+		purchasesSettings.setTitle(R.string.aprs_services_title);
+		purchasesSettings.setSummary(R.string.aprs_services_description);
+		purchasesSettings.setIcon(getContentIcon(R.drawable.ic_action_help_online));
 		PreferenceCategory selectedProfile = requirePreference(SELECTED_PROFILE);
 		selectedProfile.setIconSpaceReserved(false);
 		setupConfigureProfilePref();
@@ -190,15 +192,9 @@ public class MainSettingsFragment extends BaseSettingsFragment implements OnSele
 
 	private void setupBackupAndRestorePref() {
 		Preference backupSettings = findPreference(BACKUP_AND_RESTORE);
-		backupSettings.setIcon(getContentIcon(R.drawable.ic_action_cloud_upload));
-
-		if (app.getBackupHelper().isRegistered()) {
-			String time = getLastBackupTimeDescription(app, "");
-			if (!Algorithms.isEmpty(time)) {
-				String summary = getString(R.string.last_sync);
-				backupSettings.setSummary(getString(R.string.ltr_or_rtl_combine_via_colon, summary, time));
-			}
-		}
+		backupSettings.setTitle(R.string.aprs_local_backup);
+		backupSettings.setSummary(R.string.aprs_local_backup_description);
+		backupSettings.setIcon(getContentIcon(R.drawable.ic_action_read_from_file));
 	}
 
 	private void profileManagementPref() {

@@ -234,10 +234,7 @@ public class PurchasesFragment extends BaseFullScreenDialogFragment implements I
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			PurchasesFragment fragment = new PurchasesFragment();
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

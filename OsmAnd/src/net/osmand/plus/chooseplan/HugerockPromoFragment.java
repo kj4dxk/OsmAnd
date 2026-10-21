@@ -63,10 +63,7 @@ public class HugerockPromoFragment extends PromoCompanyFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG, true)) {
-			HugerockPromoFragment fragment = new HugerockPromoFragment();
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

@@ -793,28 +793,6 @@ public class DiscountBottomSheet extends BaseMaterialBottomSheetDialogFragment i
 	}
 
 	public static boolean showInstance(@NonNull FragmentManager manager, @NonNull DiscountHelper.ControllerData data) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG, true)) {
-			Bundle args = new Bundle();
-			args.putString(TITLE_KEY, data.getMessage());
-			args.putString(IN_APP_SKU_KEY, data.getChoosePlanType());
-			args.putString(DESCRIPTION_KEY, data.getDescription());
-			args.putString(ICON_KEY, data.getIconId());
-			args.putString(URL_KEY, data.getUrl());
-			args.putString(BUTTON_TITLE_KEY, data.getTextBtnTitle());
-			args.putInt(TITLE_COLOR_KEY, data.getTitleColor());
-			args.putInt(DESCRIPTION_COLOR_KEY, data.getDescriptionColor());
-			args.putInt(ICON_COLOR_KEY, data.getIconColor());
-			args.putInt(BUTTON_TITLE_COLOR_KEY, data.getTextBtnTitleColor());
-			args.putString(SELECTED_PRICE_BUTTON_ID_KEY, data.getSelectedChoosePlanButtonId());
-			OsmAndFeature feature = data.getChoosePlanFeature();
-			if (feature != null) {
-				args.putString(FEATURE_KEY, feature.name());
-			}
-			DiscountBottomSheet fragment = new DiscountBottomSheet();
-			fragment.setArguments(args);
-			fragment.show(manager, TAG);
-			return true;
-		}
 		return false;
 	}
 

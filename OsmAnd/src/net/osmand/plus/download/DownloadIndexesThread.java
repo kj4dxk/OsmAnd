@@ -433,7 +433,7 @@ public class DownloadIndexesThread {
 		private void showWarnDialog() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
 			builder.setMessage(R.string.map_version_changed_info);
-			builder.setPositiveButton(R.string.button_upgrade_osmandplus, (dialog, which) -> {
+			builder.setPositiveButton(R.string.aprs_services_title, (dialog, which) -> {
 				Uri uri = Uri.parse(Version.getUrlWithUtmRef(app, FULL_VERSION_NAME));
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				AndroidUtils.startActivityIfSafe(ctx, intent);

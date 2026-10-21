@@ -608,15 +608,7 @@ public class AuthorizeFragment extends BaseFullScreenFragment implements OnRegis
 	}
 
 	public static void showInstance(@NonNull FragmentManager fragmentManager, @NonNull LoginDialogType dialogType) {
-		if (AndroidUtils.isFragmentCanBeAdded(fragmentManager, TAG)) {
-			AuthorizeFragment fragment = new AuthorizeFragment();
-			fragment.startingDialogType = dialogType;
-			fragment.setDialogType(dialogType);
-			fragmentManager.beginTransaction()
-					.replace(R.id.fragmentContainer, fragment, TAG)
-					.addToBackStack(TAG)
-					.commitAllowingStateLoss();
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(fragmentManager);
 	}
 
 	@Override

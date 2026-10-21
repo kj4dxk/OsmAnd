@@ -93,6 +93,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
         if (!isActive) return
         helper.addItem(ContextMenuItem("aprs.settings").setTitleId(R.string.aprs_name, activity)
             .setIcon(logoResourceId).setListener { _, _, _, _ -> showSettings(activity); true })
+        helper.addItem(ContextMenuItem("aprs.services").setTitleId(R.string.aprs_services_title, activity)
+            .setIcon(R.drawable.ic_action_help_online).setListener { _, _, _, _ -> AprsLocalServices.show(activity); true })
     }
 
     private fun connect(activity: MapActivity) {

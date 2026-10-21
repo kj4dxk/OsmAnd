@@ -352,12 +352,7 @@ public class ChoosePlanFragment extends BasePurchaseDialogFragment implements Ca
 	}
 
 	public static void showInstance(@NonNull FragmentActivity activity, @NonNull OsmAndFeature selectedFeature) {
-		FragmentManager fragmentManager = activity.getSupportFragmentManager();
-		if (AndroidUtils.isFragmentCanBeAdded(fragmentManager, TAG)) {
-			ChoosePlanFragment fragment = new ChoosePlanFragment();
-			fragment.selectedFeature = selectedFeature;
-			fragment.show(fragmentManager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 	}
 
 	@Override

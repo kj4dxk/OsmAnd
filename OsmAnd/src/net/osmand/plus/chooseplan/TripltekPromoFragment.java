@@ -63,10 +63,7 @@ public class TripltekPromoFragment extends PromoCompanyFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG, true)) {
-			TripltekPromoFragment fragment = new TripltekPromoFragment();
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

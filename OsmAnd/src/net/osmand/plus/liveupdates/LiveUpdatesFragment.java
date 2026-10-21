@@ -648,27 +648,11 @@ public class LiveUpdatesFragment extends BaseFullScreenDialogFragment implements
 	}
 
 	public static void showUpdateDialog(Activity activity, FragmentManager fragmentManager, LiveUpdateListener listener) {
-		List<LocalItem> mapsToUpdate = listener.getMapsToUpdate();
-		if (!Algorithms.isEmpty(mapsToUpdate)) {
-			int countEnabled = listener.getMapsToUpdate().size();
-			if (countEnabled == 1) {
-				runLiveUpdate(activity, getFileNameWithoutRoadSuffix(mapsToUpdate.get(0)), false, listener::processFinish);
-			} else if (countEnabled > 1) {
-				Fragment target = null;
-				if (listener instanceof Fragment) {
-					target = (Fragment) listener;
-				}
-				LiveUpdatesUpdateAllBottomSheet.showInstance(fragmentManager, target);
-			}
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(fragmentManager);
 	}
 
 	public static void showInstance(@NonNull FragmentManager fragmentManager, Fragment target) {
-		if (AndroidUtils.isFragmentCanBeAdded(fragmentManager, TAG)) {
-			LiveUpdatesFragment fragment = new LiveUpdatesFragment();
-			fragment.setTargetFragment(target, 0);
-			fragment.show(fragmentManager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(fragmentManager);
 	}
 
 	@Override

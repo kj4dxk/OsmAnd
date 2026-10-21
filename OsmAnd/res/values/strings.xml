@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <string name="aprs_services_title">APRSISOSM services</string>
+    <string name="aprs_local_backup">Backup options</string>
+    <string name="aprs_local_backup_description">Use file export/import below. PC cloud backup is not configured.</string>
+    <string name="aprs_services_description">Maps, address search, and route calculations are hosted on your PC. Open the setup guide to connect the app. No purchase is required from this screen.</string>
+    <string name="aprs_services_map">Open PC map and search</string>
+    <string name="aprs_services_setup">Open phone setup guide</string>
+    <string name="aprs_services_monitor">Open server build monitor</string>
+    <string name="aprs_services_copy_tiles">Copy map tile address</string>
+    <string name="aprs_services_copy_routing">Copy routing address</string>
+    <string name="aprs_address_copied">Server address copied</string>
+    <string name="aprs_services_unavailable">Your PC currently provides raster map tiles, Photon search, and Valhalla routing. Worldwide data may still be preparing; check the monitor. It does not provide OsmAnd vector-map downloads, incremental Live Updates, cloud backup, or weather. Use local file export/import for backups.</string>
+    <string name="aprs_services_feature_notice">See APRSISOSM services for availability on your PC.</string>
     <string name="aprs_name">APRSISOSM</string>
     <string name="aprs_description">View APRS stations and beacon GPS positions over APRS-IS while the map is open.</string>
     <string name="aprs_callsign">Callsign (for example KJ4DXK)</string>

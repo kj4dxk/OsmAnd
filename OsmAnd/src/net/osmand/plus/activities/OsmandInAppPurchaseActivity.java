@@ -97,39 +97,7 @@ public class OsmandInAppPurchaseActivity extends AppCompatActivity implements In
 	}
 
 	private void initInAppPurchaseHelper() {
-		stopInAppPurchaseHelper();
-		if (purchaseHelper == null) {
-			InAppPurchaseHelper purchaseHelper = app.getInAppPurchaseHelper();
-			if (settings.isInternetConnectionAvailable()
-					&& isInAppPurchaseAllowed()
-					&& Version.isInAppPurchaseSupported()) {
-				this.purchaseHelper = purchaseHelper;
-			}
-		}
-		if (purchaseHelper != null) {
-			WeakReference<OsmandInAppPurchaseActivity> activityRef = new WeakReference<>(this);
-			purchaseHelper.isInAppPurchaseSupported(this, new InAppPurchaseInitCallback() {
-				@Override
-				public void onSuccess() {
-					OsmandInAppPurchaseActivity activity = activityRef.get();
-					if (!activityDestroyed && AndroidUtils.isActivityNotDestroyed(activity)) {
-						purchaseHelper.setUiActivity(activity);
-						if (purchaseHelper.needRequestInventory()) {
-							purchaseHelper.requestInventory(false);
-						}
-					}
-				}
-
-				@Override
-				public void onFail() {
-				}
-			});
-		} else if (isInAppPurchaseAllowed() && settings.isInternetConnectionAvailable()) {
-			InAppPurchaseHelper purchaseHelper = app.getInAppPurchaseHelper();
-			if (purchaseHelper != null && purchaseHelper.needRequestPromo()) {
-				purchaseHelper.checkPromoAsync(null);
-			}
-		}
+		// No billing, subscription inventory, or promo requests in APRSISOSM.
 	}
 
 	private void stopInAppPurchaseHelper() {
@@ -140,54 +108,20 @@ public class OsmandInAppPurchaseActivity extends AppCompatActivity implements In
 	}
 
 	public static void purchaseFullVersion(@NonNull Activity activity) {
-		OsmandApplication app = (OsmandApplication) activity.getApplication();
-		if (app != null && Version.isFreeVersion(app)) {
-			if (app.isPlusVersionInApp()) {
-				InAppPurchaseHelper purchaseHelper = app.getInAppPurchaseHelper();
-				if (purchaseHelper != null) {
-					app.logEvent("in_app_purchase_redirect");
-					try {
-						purchaseHelper.purchaseFullVersion(activity);
-					} catch (UnsupportedOperationException e) {
-						LOG.error("purchaseFullVersion is not supported", e);
-					}
-				}
-			} else {
-				app.logEvent("paid_version_redirect");
-				Intent intent = new Intent(Intent.ACTION_VIEW,
-						Uri.parse(Version.getUrlWithUtmRef(app, FULL_VERSION_NAME)));
-				AndroidUtils.startActivityIfSafe(activity, intent);
-			}
+		if (activity instanceof androidx.fragment.app.FragmentActivity) {
+			net.osmand.plus.plugins.aprs.AprsLocalServices.show((androidx.fragment.app.FragmentActivity) activity);
 		}
 	}
 
 	public static void purchaseDepthContours(@NonNull Activity activity) {
-		OsmandApplication app = (OsmandApplication) activity.getApplication();
-		if (app != null) {
-			InAppPurchaseHelper purchaseHelper = app.getInAppPurchaseHelper();
-			if (purchaseHelper != null) {
-				app.logEvent("depth_contours_purchase_redirect");
-				try {
-					purchaseHelper.purchaseDepthContours(activity);
-				} catch (UnsupportedOperationException e) {
-					LOG.error("purchaseDepthContours is not supported", e);
-				}
-			}
+		if (activity instanceof androidx.fragment.app.FragmentActivity) {
+			net.osmand.plus.plugins.aprs.AprsLocalServices.show((androidx.fragment.app.FragmentActivity) activity);
 		}
 	}
 
 	public static void purchaseContourLines(@NonNull Activity activity) {
-		OsmandApplication app = (OsmandApplication) activity.getApplication();
-		if (app != null) {
-			InAppPurchaseHelper purchaseHelper = app.getInAppPurchaseHelper();
-			if (purchaseHelper != null) {
-				app.logEvent("contour_lines_purchase_redirect");
-				try {
-					purchaseHelper.purchaseContourLines(activity);
-				} catch (UnsupportedOperationException e) {
-					LOG.error("purchaseContourLines is not supported", e);
-				}
-			}
+		if (activity instanceof androidx.fragment.app.FragmentActivity) {
+			net.osmand.plus.plugins.aprs.AprsLocalServices.show((androidx.fragment.app.FragmentActivity) activity);
 		}
 	}
 

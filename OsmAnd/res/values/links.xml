@@ -35,9 +35,9 @@
     <string name="docs_plugin_srtm" translatable="false">https://osmand.net/docs/user/plugins/topography</string>
     <string name="weather_global_forecast_system" translatable="false">https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast</string>
 
-    <string name="docs_purchases" translatable="false">https://docs.osmand.net/docs/user/purchases/</string>
-    <string name="docs_purchases_android" translatable="false">https://docs.osmand.net/docs/user/purchases/android</string>
-    <string name="docs_purchases_new_device" translatable="false">https://docs.osmand.net/docs/user/purchases/#new-device--new-account</string>
+    <string name="docs_purchases" translatable="false">http://pdeffenb.homeip.net:82/osmand-setup.html</string>
+    <string name="docs_purchases_android" translatable="false">http://pdeffenb.homeip.net:82/osmand-setup.html</string>
+    <string name="docs_purchases_new_device" translatable="false">http://pdeffenb.homeip.net:82/osmand-setup.html</string>
     <string name="docs_map_download_tiles" translatable="false">https://docs.osmand.net/docs/user/map/raster-maps#download--update-tiles</string>
     <string name="docs_troubleshooting_voice_navigation" translatable="false">https://docs.osmand.net/docs/user/troubleshooting/navigation#voice-navigation</string>
     <string name="docs_osmand_live" translatable="false">https://osmand.net/docs/user/personal/maps-resources#osmand-live</string>

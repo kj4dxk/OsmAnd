@@ -70,10 +70,7 @@ public class HMDPromoFragment extends PromoCompanyFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG, true)) {
-			HMDPromoFragment fragment = new HMDPromoFragment();
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

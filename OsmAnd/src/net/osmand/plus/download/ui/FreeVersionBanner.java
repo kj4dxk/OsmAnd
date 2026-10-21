@@ -84,22 +84,11 @@ public class FreeVersionBanner {
 	}
 
 	public void initFreeVersionBanner() {
-		if (!DownloadActivity.shouldShowFreeVersionBanner(app)) {
-			freeVersionBanner.setVisibility(View.GONE);
-			return;
-		}
-		freeVersionBanner.setVisibility(View.VISIBLE);
-		updateFreeVersionBanner();
+		freeVersionBanner.setVisibility(View.GONE);
 	}
 
 	public void updateFreeVersionBanner() {
-		if (!DownloadActivity.shouldShowFreeVersionBanner(app)) {
-			if (freeVersionBanner.getVisibility() == View.VISIBLE) {
-				freeVersionBanner.setVisibility(View.GONE);
-			}
-			return;
-		}
-		updateBanner(getDownloadsLeft(true));
+		freeVersionBanner.setVisibility(View.GONE);
 	}
 
 	private void updateBanner(int downloadsLeft) {

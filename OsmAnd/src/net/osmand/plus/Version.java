@@ -74,7 +74,7 @@ public class Version {
 	}
 
 	public static boolean isInAppPurchaseSupported() {
-		return isGooglePlayEnabled() || isHuawei() || isAmazon() || isHMDBuild();
+		return false;
 	}
 
 	public static boolean isGooglePlayInstalled(@NonNull OsmandApplication app) {
@@ -96,6 +96,9 @@ public class Version {
 	}
 
 	public static String getUrlWithUtmRef(@NonNull OsmandApplication app, String appName) {
+		if (FULL_VERSION_NAME.equals(appName)) {
+			return net.osmand.plus.plugins.aprs.AprsLocalServices.BASE_URL + "/osmand-setup.html";
+		}
 		return marketPrefix(app) + appName + UTM_REF;
 	}
 

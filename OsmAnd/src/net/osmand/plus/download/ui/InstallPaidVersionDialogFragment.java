@@ -28,11 +28,11 @@ public class InstallPaidVersionDialogFragment extends BaseAlertDialogFragment {
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 		updateNightMode();
 		AlertDialog.Builder builder = createDialogBuilder();
-		builder.setTitle(R.string.free_version_title);
-		builder.setMessage(DownloadValidationManager.getFreeVersionMessage(app));
+		builder.setTitle(R.string.aprs_services_title);
+		builder.setMessage(R.string.aprs_services_unavailable);
 
 		if (Version.isMarketEnabled()) {
-			builder.setPositiveButton(R.string.install_paid, (dialog, which) -> {
+			builder.setPositiveButton(R.string.aprs_services_setup, (dialog, which) -> {
 				Context context = getContext();
 				if (context != null) {
 					Uri uri = Uri.parse(Version.getUrlWithUtmRef(app, FULL_VERSION_NAME));
@@ -48,8 +48,6 @@ public class InstallPaidVersionDialogFragment extends BaseAlertDialogFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentManager fragmentManager) {
-		if (AndroidUtils.isFragmentCanBeAdded(fragmentManager, TAG)) {
-			new InstallPaidVersionDialogFragment().show(fragmentManager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(fragmentManager);
 	}
 }

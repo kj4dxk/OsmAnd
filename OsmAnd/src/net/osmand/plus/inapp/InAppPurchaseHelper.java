@@ -397,24 +397,23 @@ public abstract class InAppPurchaseHelper {
 	protected abstract void execImpl(@NonNull InAppPurchaseTaskType taskType, @NonNull InAppCommand command);
 
 	public boolean needRequestInventory() {
-		return !inventoryRequested && ((InAppPurchaseUtils.isSubscribedToAny(ctx) && Algorithms.isEmpty(ctx.getSettings().BILLING_PURCHASE_TOKENS_SENT.get()))
-				|| System.currentTimeMillis() - lastValidationCheckTime > PURCHASE_VALIDATION_PERIOD_MSEC);
+		return false;
 	}
 
 	public boolean needRequestPromo() {
-		return !promoRequested || System.currentTimeMillis() - lastPromoCheckTime > PURCHASE_VALIDATION_PERIOD_MSEC;
+		return false;
 	}
 
 	public void requestInventory(boolean userRequested) {
-		notifyShowProgress(InAppPurchaseTaskType.REQUEST_INVENTORY);
-		OsmAndTaskManager.executeTask(new RequestInventoryTask(userRequested));
+		// APRSISOSM does not validate upstream purchases.
 	}
 
 	public abstract void purchaseFullVersion(@NonNull Activity activity) throws UnsupportedOperationException;
 
 	public void purchaseSubscription(@NonNull Activity activity, String sku) {
-		notifyShowProgress(InAppPurchaseTaskType.PURCHASE_SUBSCRIPTION);
-		OsmAndTaskManager.executeTask(new SubscriptionPurchaseTask(activity, sku));
+		if (activity instanceof androidx.fragment.app.FragmentActivity) {
+			net.osmand.plus.plugins.aprs.AprsLocalServices.show((androidx.fragment.app.FragmentActivity) activity);
+		}
 	}
 
 	public abstract void purchaseDepthContours(@NonNull Activity activity) throws UnsupportedOperationException;
@@ -798,7 +797,7 @@ public abstract class InAppPurchaseHelper {
 	}
 
 	public void checkPromoAsync(@Nullable CallbackWithObject<Boolean> listener) {
-		OsmAndTaskManager.executeTask(new CheckBackupSubscriptionTask(listener));
+		if (listener != null) listener.processResult(false);
 	}
 
 	@SuppressLint("StaticFieldLeak")

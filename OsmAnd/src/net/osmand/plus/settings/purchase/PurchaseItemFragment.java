@@ -348,21 +348,7 @@ public class PurchaseItemFragment extends BaseFullScreenDialogFragment implement
 
 	public static void showInstance(@NonNull FragmentManager manager, @Nullable String sku,
 									@Nullable String promoType, @Nullable PurchaseOrigin origin) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			Bundle args = new Bundle();
-			if (!Algorithms.isEmpty(promoType)) {
-				args.putString(PROMO_TYPE_KEY, promoType);
-			}
-			if (!Algorithms.isEmpty(sku)) {
-				args.putString(PURCHASE_SKU_KEY, sku);
-			}
-			if (origin != null) {
-				args.putString(PURCHASE_ORIGIN_KEY, origin.name());
-			}
-			PurchaseItemFragment fragment = new PurchaseItemFragment();
-			fragment.setArguments(args);
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

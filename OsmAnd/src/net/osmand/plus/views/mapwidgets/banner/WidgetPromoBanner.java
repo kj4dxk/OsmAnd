@@ -45,10 +45,8 @@ public class WidgetPromoBanner extends MapBaseCard {
 		tvTitle.setText(widget.titleId);
 		ivWidgetIcon.setImageResource(widget.getIconId(nightMode));
 
-		String subscription = app.getString(R.string.osmand_pro);
-		String description = app.getString(R.string.available_as_part_of_subscription_plan, subscription);
-		tvDesc.setText(description);
-		ivPlanIcon.setImageResource(getProIconId());
+		tvDesc.setText(R.string.aprs_services_feature_notice);
+		ivPlanIcon.setImageResource(R.drawable.ic_action_help_online);
 
 		View container = view.findViewById(R.id.banner_container);
 		int resId = nightMode ? R.drawable.ripple_solid_dark_6dp : R.drawable.ripple_solid_light_6dp;

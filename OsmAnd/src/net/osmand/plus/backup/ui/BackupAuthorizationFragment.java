@@ -120,13 +120,7 @@ public class BackupAuthorizationFragment extends BaseFullScreenFragment implemen
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			Fragment fragment = new BackupAuthorizationFragment();
-			manager.beginTransaction()
-					.replace(R.id.fragmentContainer, fragment, TAG)
-					.addToBackStack(TAG)
-					.commitAllowingStateLoss();
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

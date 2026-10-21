@@ -336,14 +336,7 @@ public class BackupCloudFragment extends BaseFullScreenFragment implements InApp
 	}
 
 	public static void showInstance(@NonNull FragmentManager manager, @Nullable LoginDialogType dialogType) {
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			BackupCloudFragment fragment = new BackupCloudFragment();
-			fragment.dialogType = dialogType;
-			manager.beginTransaction()
-					.replace(R.id.fragmentContainer, fragment, TAG)
-					.addToBackStack(TAG)
-					.commitAllowingStateLoss();
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(manager);
 	}
 
 	@Override

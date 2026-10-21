@@ -69,21 +69,11 @@ public class MapsPlusPlanFragment extends SelectedPlanFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentActivity activity) {
-		FragmentManager manager = activity.getSupportFragmentManager();
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			new MapsPlusPlanFragment().show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 	}
 
 	public static void showInstance(@NonNull FragmentActivity activity, @NonNull String selectedButtonId) {
-		FragmentManager manager = activity.getSupportFragmentManager();
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			Bundle args = new Bundle();
-			args.putString(SELECTED_PRICE_BTN_ID, selectedButtonId);
-			MapsPlusPlanFragment fragment = new MapsPlusPlanFragment();
-			fragment.setArguments(args);
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 	}
 
 	@Override

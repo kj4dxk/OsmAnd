@@ -22,13 +22,13 @@
                 android:layout_height="@dimen/standard_icon_size"
                 android:layout_marginEnd="@dimen/content_padding_small"
                 android:layout_marginRight="@dimen/content_padding_small"
-                app:srcCompat="?attr/ic_action_osmand_pro_logo_colored" />
+                app:srcCompat="@drawable/ic_action_help_online" />
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/standard_icon_size"
-                android:tint="?attr/promo_banner_title_color"
-                app:srcCompat="@drawable/image_text_osmand_pro_one_line" />
+                android:textColor="?android:textColorPrimary"
+                android:text="@string/aprs_services_title" />
 
         </LinearLayout>
 
@@ -39,7 +39,7 @@
             android:lineSpacingMultiplier="@dimen/bottom_sheet_text_spacing_multiplier"
             android:paddingTop="@dimen/content_padding_small"
             android:paddingBottom="@dimen/content_padding_small"
-            android:text="@string/option_available_only_in_osmand_pro"
+            android:text="@string/aprs_services_feature_notice"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/default_list_text_size"
             android:textStyle="normal" />

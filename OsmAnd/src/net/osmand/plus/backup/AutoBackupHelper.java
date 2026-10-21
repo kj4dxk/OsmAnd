@@ -113,7 +113,8 @@ public class AutoBackupHelper implements OnPrepareBackupListener {
 	}
 
 	private boolean isAutoBackupConfigured() {
-		return InAppPurchaseUtils.isBackupAvailable(app) && isAutoBackupEnabled() && backupHelper.isRegistered();
+		// No compatible cloud-backup service is hosted on the user's PC.
+		return false;
 	}
 
 	public boolean isAutoBackupEnabled() {

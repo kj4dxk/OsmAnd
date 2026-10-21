@@ -21,7 +21,7 @@
 		android:key="backup_and_restore"
 		android:layout="@layout/preference_with_descr"
 		android:persistent="false"
-		android:title="@string/osmand_cloud"
+		android:title="@string/aprs_services_title"
 		tools:icon="@drawable/ic_action_cloud_upload"
 		tools:summary="@string/last_backup" />
 
@@ -33,7 +33,7 @@
 		android:key="purchases_settings"
 		android:layout="@layout/preference_with_descr"
 		android:persistent="false"
-		android:title="@string/purchases"
+		android:title="@string/aprs_services_title"
 		tools:icon="@drawable/ic_action_purchases" />
 
 	<Preference

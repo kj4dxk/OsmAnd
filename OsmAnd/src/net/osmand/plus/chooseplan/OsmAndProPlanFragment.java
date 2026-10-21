@@ -60,22 +60,11 @@ public class OsmAndProPlanFragment extends SelectedPlanFragment {
 	}
 
 	public static void showInstance(@NonNull FragmentActivity activity) {
-		FragmentManager manager = activity.getSupportFragmentManager();
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			OsmAndProPlanFragment fragment = new OsmAndProPlanFragment();
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 	}
 
 	public static void showInstance(@NonNull FragmentActivity activity, @NonNull String selectedButtonId) {
-		FragmentManager manager = activity.getSupportFragmentManager();
-		if (AndroidUtils.isFragmentCanBeAdded(manager, TAG)) {
-			Bundle args = new Bundle();
-			args.putString(SELECTED_PRICE_BTN_ID, selectedButtonId);
-			OsmAndProPlanFragment fragment = new OsmAndProPlanFragment();
-			fragment.setArguments(args);
-			fragment.show(manager, TAG);
-		}
+		net.osmand.plus.plugins.aprs.AprsLocalServices.show(activity);
 	}
 
 	@Override
