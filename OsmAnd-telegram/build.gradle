@@ -33,7 +33,7 @@ android {
 		applicationId "net.osmand.telegram"
 		minSdkVersion osmand_minSdk
 		targetSdkVersion osmand_targetSdk
-		multiDexEnabled true
+		multiDexEnabled = true
 		versionCode 1
 		versionCode System.getenv("APK_NUMBER_VERSION") ? System.getenv("APK_NUMBER_VERSION").toInteger() : versionCode
 		versionName "1.0"
@@ -85,11 +85,11 @@ android {
 
 	buildTypes {
 		debug {
-			signingConfig signingConfigs.development
+			signingConfig = signingConfigs.development
 			applicationIdSuffix ".debug"
 		}
 		release {
-			signingConfig signingConfigs.publishing
+			signingConfig = signingConfigs.publishing
 		}
 	}
 
@@ -104,7 +104,8 @@ android {
 		exclude 'META-INF/proguard/androidx-annotations.pro'
 	}
 	buildFeatures {
-		aidl true
+        buildConfig = true
+		aidl = true
 	}
 
 	applicationVariants.configureEach {

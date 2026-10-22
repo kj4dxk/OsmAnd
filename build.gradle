@@ -4,7 +4,7 @@ buildscript {
         google()
         mavenCentral()
         maven {
-            url 'https://developer.huawei.com/repo/'
+            url = 'https://developer.huawei.com/repo/'
             content {
                 includeGroupByRegex 'com\\.huawei(\\..*)?'
             }
@@ -29,7 +29,7 @@ plugins {
 
 
 allprojects {
-    group "net.osmand"
+    group = "net.osmand"
     // Configure all test tasks
     tasks.withType(Test).configureEach {
         // Set a system property for all unit tests
@@ -46,10 +46,10 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url "https://jitpack.io"
+            url = "https://jitpack.io"
         }
         maven {
-            url 'https://developer.huawei.com/repo/'
+            url = 'https://developer.huawei.com/repo/'
             content {
                 includeGroupByRegex 'com\\.huawei(\\..*)?'
             }

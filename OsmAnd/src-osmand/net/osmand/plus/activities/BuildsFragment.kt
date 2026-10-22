@@ -241,6 +241,9 @@ class BuildsFragment : BaseMaterialFragment(), BuildsManager.Listener {
 		}
 	}
 
+	// This legacy installer contract returns cancellation/success to onInstallResult.
+	// Retained for API 24+; ACTION_VIEW does not preserve that result contract.
+	@Suppress("DEPRECATION")
 	private fun install(build: OsmAndBuild, file: File) {
 		val context = requireContext()
 		val uri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file)

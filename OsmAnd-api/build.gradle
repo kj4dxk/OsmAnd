@@ -12,7 +12,7 @@ android {
         namespace = "net.osmand.aidlapi"
     }
     lintOptions {
-        abortOnError false
+        abortOnError = false
     }
     sourceSets {
         main {
@@ -22,7 +22,8 @@ android {
         }
     }
     buildFeatures {
-        aidl true
+        buildConfig = true
+        aidl = true
     }
     publishing {
         singleVariant('release') {

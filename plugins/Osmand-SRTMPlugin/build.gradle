@@ -29,7 +29,7 @@ android {
 	}
 
 	lintOptions {
-		abortOnError false
+		abortOnError = false
 	}
 
 	sourceSets {
@@ -46,14 +46,15 @@ android {
 
 	buildTypes {
 		debug {
-			signingConfig signingConfigs.development
+			signingConfig = signingConfigs.development
 		}
 		release {
-			signingConfig signingConfigs.release
+			signingConfig = signingConfigs.release
 		}
 	}
 	buildFeatures {
-		aidl true
+        buildConfig = true
+		aidl = true
 	}
 }
 

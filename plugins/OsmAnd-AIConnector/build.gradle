@@ -40,11 +40,11 @@ android {
 	}
 
 	buildFeatures {
-		buildConfig true
+		buildConfig = true
 	}
 
 	lintOptions {
-		abortOnError false
+		abortOnError = false
 	}
 
 	sourceSets {
@@ -61,14 +61,14 @@ android {
 
 	buildTypes {
 		debug {
-			signingConfig signingConfigs.development
+			signingConfig = signingConfigs.development
 			// a debug build runs next to the released connector: own package, port and name
 			applicationIdSuffix ".debug"
 			buildConfigField "int", "MCP_PORT", "8766"
 			buildConfigField "String", "SERVICE_SUFFIX", "\" (debug)\""
 		}
 		release {
-			signingConfig signingConfigs.release
+			signingConfig = signingConfigs.release
 			buildConfigField "int", "MCP_PORT", "8765"
 			buildConfigField "String", "SERVICE_SUFFIX", "\"\""
 		}

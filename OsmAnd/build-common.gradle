@@ -11,13 +11,13 @@ android {
     namespace = "net.osmand.plus"
     defaultConfig {
         targetSdkVersion osmand_targetSdk
-        multiDexEnabled true
+        multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
 	lintOptions {
-		abortOnError false
+		abortOnError = false
 	}
 
 	// related to kuromoji
@@ -335,7 +335,7 @@ tasks.register('buildOsmAndCore', Exec) {
 		}
 	}
 
-	description "Build Legacy OsmAndCore"
+	description = "Build Legacy OsmAndCore"
 
 	if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
 		if (flavour.length() > 0) {

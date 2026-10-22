@@ -133,7 +133,7 @@ publishing {
 	}
     publications {
         maven(MavenPublication) {
-			artifactId "osmand-base"
+			artifactId = "osmand-base"
             from components.java
         }
 		ivyJava(IvyPublication) {

@@ -42,7 +42,7 @@ android {
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_17
 		targetCompatibility = JavaVersion.VERSION_17
-		coreLibraryDesugaringEnabled true
+		coreLibraryDesugaringEnabled = true
 	}
 
 	kotlinOptions {
@@ -59,8 +59,8 @@ android {
 	}
 
 	lintOptions {
-		lintConfig file("lint.xml")
-		warningsAsErrors false
+		lintConfig = file("lint.xml")
+		warningsAsErrors = false
 	}
 
 	bundle {
@@ -110,8 +110,9 @@ android {
 	}
 
 	buildFeatures {
-		aidl true
-		compose true
+        buildConfig = true
+		aidl = true
+		compose = true
 	}
 
 	flavorDimensions "version", "coreversion", "abi"
@@ -161,12 +162,12 @@ android {
 
 	buildTypes {
 		debug {
-			signingConfig signingConfigs.development
+			signingConfig = signingConfigs.development
 		}
 		release {
-			signingConfig signingConfigs.publishing
+			signingConfig = signingConfigs.publishing
 			minifyEnabled true
-			shrinkResources false
+			shrinkResources = false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 	}

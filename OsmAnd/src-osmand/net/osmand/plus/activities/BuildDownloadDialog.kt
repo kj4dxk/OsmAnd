@@ -19,7 +19,7 @@ class BuildDownloadDialog : DialogFragment() {
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 		val app = requireActivity().application as OsmandApplication
 		val build = readBuild(requireArguments())
-		val nightMode = app.daynightHelper.isNightMode(ThemeUsageContext.APP)
+		val nightMode = app.daynightHelper.isNightMode(app.settings.applicationMode, ThemeUsageContext.APP)
 		val context = ContextThemeWrapper(requireContext(),
 			if (nightMode) R.style.OsmandMaterialDarkTheme else R.style.OsmandMaterialLightTheme)
 		val date = build.date?.let { AndroidUtils.formatDateTime(app, it.time) } ?: ""
