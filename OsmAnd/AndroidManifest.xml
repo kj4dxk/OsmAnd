@@ -1152,6 +1152,8 @@
 			android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
 		<!-- keep android:process on a separate line !! -->
+        <service android:name="net.osmand.plus.plugins.aprs.AprsService"
+            android:exported="false" android:foregroundServiceType="location" />
 		<service
 			android:process="${applicationId}"
 			android:label="@string/process_navigation_service"

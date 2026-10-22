@@ -20,7 +20,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.*
-import net.osmand.Location
 import net.osmand.data.RotatedTileBox
 import net.osmand.plus.OsmandApplication
 import net.osmand.plus.R
@@ -34,14 +33,13 @@ import net.osmand.shared.aprs.*
 import kotlin.math.hypot
 import org.json.JSONObject
 
-/** First Android integration: explicitly enabled, foreground APRS-IS operation. */
+/** Map controls and station layer for the APRS foreground service. */
 class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     private val preferences = app.getSharedPreferences("aprs", Context.MODE_PRIVATE)
-    private val client = AprsIsClient()
+    private val client get() = AprsService.client
     private val uiScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var refreshJob: Job? = null
     private var layer: AprsLayer? = null
-    private var foreground = false
 
     override fun getId() = "osmand.aprs"
     override fun isEnableByDefault() = true
@@ -61,8 +59,7 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     }
 
     override fun mapActivityResume(activity: MapActivity) {
-        foreground = true
-        if (preferences.getBoolean("connected", false)) connect(activity)
+        if (preferences.getBoolean("connected", false) && !AprsService.running) connect(activity)
         refreshJob?.cancel()
         refreshJob = uiScope.launch {
             client.stations.collect { layer?.stations = it; activity.mapView.refreshMap() }
@@ -70,24 +67,15 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     }
 
     override fun mapActivityPause(activity: MapActivity) {
-        foreground = false
-        client.stop()
         refreshJob?.cancel()
     }
 
     override fun disable(app: OsmandApplication) {
         preferences.edit().putBoolean("connected", false).apply()
-        client.stop()
+        AprsService.stop(app)
         refreshJob?.cancel()
         layer?.let { app.osmandMap.mapView.removeLayer(it) }
         super.disable(app)
-    }
-
-    override fun updateLocation(location: Location?) {
-        if (!foreground || location == null || !location.hasAccuracy()) return
-        runCatching {
-            client.updateFix(AprsFix(location.latitude, location.longitude, location.time, location.accuracy.toDouble()))
-        }
     }
 
     override fun registerOptionsMenuItems(activity: MapActivity, helper: ContextMenuAdapter) {
@@ -105,14 +93,29 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
                 client.stations.collect { layer?.stations = it; activity.mapView.refreshMap() }
             }
             val box = activity.mapView.currentRotatedTileBox
-            client.start(AprsIsConfig(
-                callsign = preferences.getString("callsign", "")!!.trim().uppercase(),
-                passcode = preferences.getString("passcode", "-1")!!.ifBlank { "-1" },
-                host = preferences.getString("host", "rotate.aprs2.net")!!.trim(),
-                port = preferences.getInt("port", 14580),
-                latitude = box.latitude, longitude = box.longitude,
-                beaconEnabled = preferences.getBoolean("beacon", false)))
-            app.locationProvider.lastKnownLocation?.let { updateLocation(it) }
+            if (androidx.core.content.ContextCompat.checkSelfPermission(activity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                preferences.edit().putBoolean("connected", false).apply()
+                androidx.core.app.ActivityCompat.requestPermissions(activity,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 7281)
+                Toast.makeText(activity, R.string.aprs_permission_retry, Toast.LENGTH_LONG).show()
+                return
+            }
+            if (android.os.Build.VERSION.SDK_INT >= 33 && androidx.core.content.ContextCompat.checkSelfPermission(activity,
+                    android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                androidx.core.app.ActivityCompat.requestPermissions(activity,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 7282)
+            }
+            preferences.edit().putFloat("filter_lat", box.latitude.toFloat())
+                .putFloat("filter_lon", box.longitude.toFloat()).apply()
+            androidx.core.content.ContextCompat.startForegroundService(activity,
+                android.content.Intent(activity, AprsService::class.java))
+        } catch (_: SecurityException) {
+            AprsService.stop(app)
+            Toast.makeText(activity, R.string.aprs_service_failed, Toast.LENGTH_LONG).show()
+        } catch (_: IllegalStateException) {
+            AprsService.stop(app)
+            Toast.makeText(activity, R.string.aprs_service_failed, Toast.LENGTH_LONG).show()
         } catch (_: IllegalArgumentException) {
             preferences.edit().putBoolean("connected", false).apply()
             Toast.makeText(activity, R.string.aprs_invalid_settings, Toast.LENGTH_LONG).show()
@@ -214,12 +217,11 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
             .setPositiveButton(R.string.aprs_connect, null)
             .setNegativeButton(R.string.aprs_disconnect) { _, _ ->
                 preferences.edit().putBoolean("connected", false).apply()
-                client.stop()
+                AprsService.stop(app)
             }.setNeutralButton(android.R.string.cancel, null).create()
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if (saveSettings(true)) {
-                    foreground = true
                     connect(activity)
                     dialog.dismiss()
                 }
@@ -227,7 +229,7 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
         }
         saveButton.setOnClickListener {
             if (saveSettings(false)) {
-                client.stop()
+                AprsService.stop(app)
                 Toast.makeText(activity, R.string.aprs_settings_saved, Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }

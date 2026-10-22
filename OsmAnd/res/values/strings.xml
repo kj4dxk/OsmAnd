@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <string name="aprs_notification_channel">APRS connection</string>
+    <string name="aprs_notification_status">%1$s · %2$s stations · %3$s</string>
+    <string name="aprs_beacon_on">GPS beaconing enabled</string>
+    <string name="aprs_beacon_off">Receive only</string>
+    <string name="aprs_permission_retry">Allow precise location, then tap Connect again.</string>
+    <string name="aprs_service_failed">Unable to start APRS. Check location permission and reconnect.</string>
+
     <string name="aprs_pc_map_source" translatable="false">pdeffenb PC maps</string>
     <string name="aprs_search_title">Search your PC map</string>
     <string name="aprs_search_hint">Address or place name</string>
@@ -43,7 +50,7 @@
     <string name="aprs_host">Server</string>
     <string name="aprs_port">Port</string>
     <string name="aprs_beacon">Beacon GPS position every 2 minutes</string>
-    <string name="aprs_foreground_notice">Stations within 100 km of the map center at connection time. Beaconing needs a verified login and a GPS fix under 30 seconds old, accurate within 100 meters. Operation stops when the map leaves the foreground. Use the map location button to enable GPS.</string>
+    <string name="aprs_foreground_notice">Stations within 100 km of the map center at connection time. Beaconing needs a verified login and a GPS fix under 30 seconds old, accurate within 100 meters. Connection and GPS continue with the screen off. A persistent APRS notification provides Disconnect. Android location permission is required.</string>
     <string name="aprs_connect">Connect</string>
     <string name="aprs_disconnect">Disconnect</string>
     <string name="aprs_invalid_settings">Check the callsign, passcode, server, and port. Beaconing requires a passcode other than -1.</string>

@@ -138,9 +138,15 @@ APRS markers over the main raster, and GPS delivery. End-to-end Photon search,
 all three routing modes, voice during navigation, and physical-phone Wi-Fi/cellular
 tests remain pending service readiness and phone testing.
 
-This preview connects only while the map is in the foreground. It disconnects
-when the map pauses and reconnects when it resumes if the connection was enabled.
-It does not yet implement an Android foreground service or background beaconing.
+APRS runs in an Android location foreground service after Connect is selected.
+Its ongoing notification shows connection state and offers Disconnect. Leaving the
+map or turning off the screen keeps networking and optional GPS beaconing running.
+Precise location permission is required; GPS updates are requested only when beaconing
+is enabled. A partial wake lock lasts only for the active service. Disconnect, saving
+without connecting, or disabling the plugin stops networking, GPS, and the wake lock.
+The service is not started at boot and does not silently restart after process death;
+return to the map to resume a previously requested connection. Android force-stop
+and manufacturer battery restrictions can still interrupt it.
 
 ## Behavior
 
@@ -192,3 +198,29 @@ was installed and checked again. Physical-phone testing remains unverified.
 Reference behavior: [APRSISMO](https://github.com/APRSFoundation/APRSISMO).
 Protocol references: [APRS-IS connections](https://www.aprs-is.net/Connecting.aspx)
 and [server filters](https://www.aprs-is.net/javAPRSFilter.aspx).
+
+## Android foreground service and build configuration
+
+The preview3 Android service uses the `location` foreground-service type and a
+low-importance ongoing notification. Its Disconnect action works without opening
+the map. GPS fixes use monotonic fix age, avoiding stale cached locations after a
+wall-clock adjustment. No background-location permission or boot receiver is needed:
+the service is started from the visible map after permission is granted.
+
+The build remains pinned to Gradle 8.14.5, AGP 8.13.2 and Java 17. BuildConfig is
+explicitly enabled per Android module instead of the deprecated global property.
+Deprecated Groovy property assignments have been migrated, and native cinterop
+commonization is enabled for the shared module. iOS targets remain configured but
+cannot be built on Windows. Legacy installer deprecation is scoped and documented
+because its activity-result contract is still needed; other inherited source
+warnings are not globally suppressed.
+
+Preview3 verification on the API 36 S26 emulator: a local TCP APRS test server
+verified the test login and supplied one station. With the map backgrounded and
+screen asleep, GPS beacons arrived 120.6 seconds apart. The notification Disconnect
+action closed the socket, stopped the service, released its wake lock and removed
+its GPS listener. Test preferences and mock GPS were cleared afterward. No public
+APRS-IS transmission was used for this service lifecycle test. The existing 17 APRS
+unit tests passed; the core suite reported 2,407 tests, zero failures and 37 skipped.
+The final incremental universal APK build passed with no Gradle warnings; a full
+shared-source compilation still reports inherited Kotlin/Java source warnings.
