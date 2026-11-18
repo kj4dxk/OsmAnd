@@ -40,6 +40,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     private val uiScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private var refreshJob: Job? = null
     private var layer: AprsLayer? = null
+    private var speedometer: AprsSpeedometerView? = null
+    private var speedJob: Job? = null
 
     override fun getId() = "osmand.aprs"
     override fun isEnableByDefault() = true
@@ -59,6 +61,22 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     }
 
     override fun mapActivityResume(activity: MapActivity) {
+        // Use the APRSISMO-style GPS dial instead of a second stock speedometer.
+        app.settings.SHOW_SPEEDOMETER.set(false)
+        val root = activity.findViewById<android.widget.FrameLayout>(R.id.map_hud_layout)
+        speedometer?.let { (it.parent as? android.view.ViewGroup)?.removeView(it) }
+        val density = activity.resources.displayMetrics.density
+        speedometer = AprsSpeedometerView(activity).also {
+            root.addView(it, android.widget.FrameLayout.LayoutParams((150*density).toInt(), (96*density).toInt(),
+                android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL).apply { bottomMargin = (112*density).toInt() })
+        }
+        speedJob?.cancel()
+        speedJob = uiScope.launch { while(isActive) { speedometer?.invalidate(); delay(1000) } }
+        app.locationProvider.lastKnownLocation?.let { AprsMotion.update(it) }
+        activity.intent?.getStringExtra("aprs_chat")?.let { peer ->
+            activity.intent.removeExtra("aprs_chat")
+            root.post { AprsChats.conversation(activity, peer) }
+        }
         if (preferences.getBoolean("connected", false) && !AprsService.running) connect(activity)
         refreshJob?.cancel()
         refreshJob = uiScope.launch {
@@ -67,10 +85,16 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
     }
 
     override fun mapActivityPause(activity: MapActivity) {
+        speedJob?.cancel()
+        speedometer?.let { (it.parent as? android.view.ViewGroup)?.removeView(it) }
+        speedometer = null
         refreshJob?.cancel()
     }
 
     override fun disable(app: OsmandApplication) {
+        speedJob?.cancel()
+        speedometer?.let { (it.parent as? android.view.ViewGroup)?.removeView(it) }
+        speedometer = null
         preferences.edit().putBoolean("connected", false).apply()
         AprsService.stop(app)
         refreshJob?.cancel()
@@ -78,8 +102,14 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
         super.disable(app)
     }
 
+    override fun updateLocation(location: net.osmand.Location?) {
+        location?.let { AprsMotion.update(it) }
+    }
+
     override fun registerOptionsMenuItems(activity: MapActivity, helper: ContextMenuAdapter) {
         if (!isActive) return
+        helper.addItem(ContextMenuItem("aprs.messages").setTitleId(R.string.aprs_messages, activity)
+            .setIcon(R.drawable.ic_action_sensor).setListener { _, _, _, _ -> AprsChats.inbox(activity); true })
         helper.addItem(ContextMenuItem("aprs.settings").setTitleId(R.string.aprs_name, activity)
             .setIcon(logoResourceId).setListener { _, _, _, _ -> showSettings(activity); true })
         helper.addItem(ContextMenuItem("aprs.services").setTitleId(R.string.aprs_services_title, activity)
@@ -270,7 +300,8 @@ class AprsPlugin(app: OsmandApplication) : OsmandPlugin(app) {
                 .setMessage(activity.getString(R.string.aprs_station_details, station.latitude,
                     station.longitude, station.symbolTable.toString() + station.symbol,
                     ((System.currentTimeMillis() - station.heardAtMillis) / 1000).toInt(), station.comment))
-                .setPositiveButton(android.R.string.ok, null).show()
+                .setPositiveButton(R.string.aprs_message_station) { _, _ -> AprsChats.conversation(activity, station.callsign) }
+                .setNegativeButton(android.R.string.ok, null).show()
             return true
         }
     }

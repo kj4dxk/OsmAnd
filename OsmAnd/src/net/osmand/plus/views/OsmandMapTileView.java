@@ -795,6 +795,7 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 	}
 
 	public void setRotate(float rotate, boolean force) {
+        rotate = 0; // APRSISOSM always keeps north at the top.
 		if (multiTouch || Float.isNaN(rotate)) {
 			return;
 		}
@@ -1504,13 +1505,13 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 	}
 
 	public void rotateToAnimate(float rotate) {
-		this.rotate = MapUtils.unifyRotationTo360(rotate);
+		this.rotate = 0;
 		setRotateImpl(this.rotate);
 		refreshMap();
 	}
 
 	public void rotateToAnimate(float rotate, int centerX, int centerY) {
-		this.rotate = MapUtils.unifyRotationTo360(rotate);
+		this.rotate = 0;
 		setRotateImpl(this.rotate, centerX, centerY);
 		refreshMap();
 	}
@@ -1576,6 +1577,8 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 	}
 
 	private void setRotateImpl(float rotate, int centerX, int centerY) {
+        rotate = 0;
+        this.rotate = 0;
 		MapRendererView mapRenderer = getMapRenderer();
 		if (mapRenderer != null) {
 			PointI center31 = new PointI();
@@ -1695,6 +1698,7 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 	}
 
 	private void zoomAndRotateToAnimate(boolean startZooming, boolean startRotating) {
+        startRotating = false;
 		MapRendererView mapRenderer = getMapRenderer();
 		if (mapRenderer != null && multiTouchSupport != null) {
 			PointF firstPoint = multiTouchSupport.getFirstPoint();
@@ -2151,6 +2155,9 @@ public class OsmandMapTileView implements IMapDownloaderCallback {
 			this.mapRenderer.resetElevationDataProvider();
 		}
 		this.mapRenderer = mapRenderer;
+        this.rotate = 0;
+        currentViewport.setRotate(0);
+        if (mapRenderer != null) mapRenderer.setAzimuth(0);
 		if (!isSteplessZoomSupported() && !disable) {
 			setZoomWithFloatPart(getZoom(), 0);
 		}

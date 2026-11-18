@@ -393,7 +393,7 @@ public class MapButtonsHelper {
 		allTypes.add(DisplayPositionAction.TYPE);
 		allTypes.add(NextAppProfileAction.TYPE);
 		allTypes.add(PreviousAppProfileAction.TYPE);
-		allTypes.add(ChangeMapOrientationAction.TYPE);
+
 		// interface
 		allTypes.add(OpenNavigationViewAction.TYPE);
 		allTypes.add(OpenSearchViewAction.TYPE);

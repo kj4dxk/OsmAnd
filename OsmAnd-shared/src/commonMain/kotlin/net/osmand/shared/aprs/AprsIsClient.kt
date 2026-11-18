@@ -6,6 +6,8 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -38,6 +40,22 @@ class AprsIsClient {
     val stations: StateFlow<List<AprsStation>> = mutableStations
     private val fix = MutableStateFlow<AprsFix?>(null)
     private var job: Job? = null
+    private val incoming = Channel<AprsMessage>(64)
+    val messages = incoming.receiveAsFlow()
+    private class Sender(val callsign: String, val write: suspend (String) -> Unit)
+    private val sender = MutableStateFlow<Sender?>(null)
+
+    suspend fun sendMessage(account: String, recipient: String, text: String, id: String) {
+        val active = checkNotNull(sender.value) { "Not connected" }
+        check(active.callsign == account)
+        active.write(AprsMessages.packet(account, recipient, text, id))
+    }
+
+    suspend fun acknowledge(account: String, recipient: String, id: String) {
+        val active = checkNotNull(sender.value) { "Not connected" }
+        check(active.callsign == account)
+        active.write(AprsMessages.ack(account, recipient, id))
+    }
 
     fun updateFix(value: AprsFix) { fix.value = value }
 
@@ -67,6 +85,7 @@ class AprsIsClient {
     }
 
     fun stop() {
+        sender.value = null
         job?.cancel()
         job = null
         fix.value = null
@@ -86,9 +105,16 @@ class AprsIsClient {
                 val banner = withTimeout(20_000) { input.readUTF8Line(512) }
                 check(banner?.startsWith("#") == true)
                 output.writeStringUtf8(AprsProtocol.login(config.callsign, config.passcode,
-                    AprsProtocol.rangeFilter(config.latitude, config.longitude, config.radiusKm)))
+                    AprsProtocol.rangeFilter(config.latitude, config.longitude, config.radiusKm) + " g/" + config.callsign))
                 mutableState.value = AprsConnectionState.RECEIVING
                 val verified = MutableStateFlow(false)
+                val sessionSender = Sender(config.callsign) { packet ->
+                    writeLock.withLock {
+                        check(verified.value && isActive) { "Verified login required" }
+                        output.writeStringUtf8(packet)
+                    }
+                }
+                sender.value = sessionSender
                 val storeLock = Mutex()
                 val ticker = launch {
                     while (isActive) {
@@ -113,10 +139,15 @@ class AprsIsClient {
                                 mutableState.value = if (verified.value) AprsConnectionState.VERIFIED else AprsConnectionState.RECEIVING
                             }
                         } else {
+                            AprsMessages.parse(line)?.takeIf { it.recipient == config.callsign && it.sender != config.callsign }
+                                ?.let { incoming.send(it) }
                             storeLock.withLock { store.receive(line, Clock.System.now().toEpochMilliseconds()) }
                         }
                     }
-                } finally { ticker.cancelAndJoin() }
+                } finally {
+                    if (sender.value === sessionSender) sender.value = null
+                    ticker.cancelAndJoin()
+                }
             } finally { socket.close() }
         } finally { selector.close() }
     }

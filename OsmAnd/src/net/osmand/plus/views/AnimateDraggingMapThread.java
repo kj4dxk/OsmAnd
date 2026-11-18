@@ -264,7 +264,7 @@ public class AnimateDraggingMapThread implements TouchListener {
 			float duration = fullDuration - rotateDuration;
 			PointI finish31 = NativeUtilities.calculateTarget31(mapRenderer, finalLat, finalLon, false);
 			startThreadAnimating(() -> {
-				animator.animateAzimuthTo(finalRotation, rotateDuration, TimingFunction.Linear, userInteractionAnimationKey);
+				animator.animateAzimuthTo(0, rotateDuration, TimingFunction.Linear, userInteractionAnimationKey);
 				animatingMapRotation = true;
 				animatingMapAnimator();
 				animatingMapRotation = false;
@@ -321,7 +321,7 @@ public class AnimateDraggingMapThread implements TouchListener {
 			zoomFP = startZoomFP;
 		}
 		if (finalRotation != null) {
-			rotation = finalRotation;
+			rotation = 0;
 		} else {
 			rotation = startRotation;
 		}
@@ -395,7 +395,7 @@ public class AnimateDraggingMapThread implements TouchListener {
 			}
 
 			if (animateRotation) {
-				animator.animateAzimuthTo(-rotation, Math.max(animationDuration, ROTATION_MOVE_ANIMATION_TIME) / 1000f,
+				animator.animateAzimuthTo(0, Math.max(animationDuration, ROTATION_MOVE_ANIMATION_TIME) / 1000f,
 						TimingFunction.Linear,
 						locationServicesAnimationKey);
 			}
@@ -1134,11 +1134,11 @@ public class AnimateDraggingMapThread implements TouchListener {
 
 			animator.cancelCurrentAnimation(locationServicesAnimationKey, AnimatedValue.Azimuth);
 			animator.cancelCurrentAnimation(userInteractionAnimationKey, AnimatedValue.Azimuth);
-			animator.animateAzimuthTo(-rotate, ROTATION_ANIMATION_TIME / 1000f, TimingFunction.Linear,
+			animator.animateAzimuthTo(0, ROTATION_ANIMATION_TIME / 1000f, TimingFunction.Linear,
 					locationServicesAnimationKey);
 
 			startThreadAnimating(() -> {
-				targetRotate = rotate;
+				targetRotate = 0;
 				animatingMapRotation = true;
 				animatingMapAnimator();
 				animatingMapRotation = false;
@@ -1151,11 +1151,11 @@ public class AnimateDraggingMapThread implements TouchListener {
 				// do we need to kill and recreate the thread? wait would be enough as now it
 				// also handles the rotation?
 				startThreadAnimating(() -> {
-					targetRotate = rotate;
+					targetRotate = 0;
 					pendingRotateAnimation();
 				});
 			} else {
-				this.targetRotate = rotate;
+				this.targetRotate = 0;
 			}
 		}
 	}

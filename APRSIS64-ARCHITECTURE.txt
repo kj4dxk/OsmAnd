@@ -1,0 +1,123 @@
+APRSIS64 architecture research — 17 November 2026
+
+Recommendation
+Use Kotlin/JVM, Compose Multiplatform, and MapLibre Native through MapLibre Compose
+for a Windows x64 application. Reuse the existing Kotlin APRS core in process.
+Make this conditional on a Windows rendering and installer prototype. This is a
+researched recommendation, not a claim of measured performance.
+
+MapLibre Compose now documents native Windows desktop support. Its API remains
+pre-1.0 and evolving. The current setup requires Java 25+ and lists Windows x64
+OpenGL/Vulkan runtimes. Pin exact versions and isolate the map API. Give desktop
+its own compatible build configuration, preserving Android's Java 17 setup.
+Extract a narrow, independently buildable aprs-core artifact from the larger
+OsmAnd-shared module; do not copy it into a second codebase or require Android
+Gradle plugins in desktop builds. Java 17 shared-core bytecode can run on a newer
+desktop JVM. Gradle documents
+Java 25 support beginning with Gradle 9.1.
+
+Component choices
+
+UI: Compose Desktop. Use a map-centered workspace, resizable station/chat panes,
+keyboard shortcuts, station search, status strip, and tray controls. Transport
+lifetime belongs to an application session, not a map widget or recomposition.
+Tray operation must be explicit, with clear disconnect/exit controls.
+
+Maps: MapLibre Native through MapLibre Compose. Start with existing pdeffenb raster
+tiles; add a self-hosted vector style after verifying its schema, fonts and sprites.
+Draw stations using batched GeoJSON and symbol layers, tracks using line layers,
+and areas using fill layers. Avoid thousands of individual UI widgets for symbols.
+Use feature hit testing for station selection and chat. Keep north-up locked.
+Create a proper APRS symbol atlas, including overlay characters and attribution.
+
+Map abstraction: MapSurface handles viewport, basemap, station/track layers,
+selection and hit testing. Domain code must not depend on MapLibre objects. This
+contains API changes and permits a browser-renderer fallback if necessary.
+
+Persistence: SQLite with versioned migrations and a serialized writer. SQLDelight
+is the preferred shared schema/repository tool, with Android and JVM JDBC drivers.
+WAL allows readers alongside the writer; keep transactions short, set a busy
+timeout and test recovery. Separate durable chats/outbox, station/track history,
+and disposable map cache. Key chats by full own callsign and peer callsign/SSID.
+The Android chat store currently uses SQLiteOpenHelper; move its schema and
+repository behavior behind a shared data interface before desktop reuse. Desktop
+must not depend on Android SQLite APIs. Plan the existing SQLDelight 1.x migration
+separately rather than silently upgrading the entire Android project.
+
+Application state: Kotlin coroutines, StateFlow, kotlinx.serialization and existing
+Ktor transport. Share retries, acknowledgements, duplicate handling, outbox policy,
+clock handling and connection management. Keep domain objects independent of UI.
+Use bounded queues and debounce map updates independently from packet handling.
+Acknowledgements must not wait for redraw. Bound station cache, tracks and packet
+logs. Add credential-redacted diagnostics and packet replay.
+
+Services: Thin typed HTTP adapters for Photon search and OSRM-compatible Valhalla
+routing, including car/foot/bike profiles. Backend outages must not stop APRS.
+Do not embed planet imports or routing-server processes in the desktop client.
+Centralize tile/style/font/search/routing URLs in named service profiles. Keep
+map attribution and allow self-hosted sources without proprietary map accounts.
+
+Offline: Start with MapLibre region packs containing tiles and required style
+assets. Include quotas, region/zoom selection and progress. Add read-only MBTiles
+through a tested resource-provider adapter. PMTiles requires its own reader or
+adapter; GL JS support does not imply identical native support. Cached maps do
+not imply offline search or routing.
+
+Windows integration: Small adapters for application-data paths, tray, notifications,
+dialogs, URL opening and DPAPI-protected credentials. Keep credentials out of logs.
+Use versioned local settings separate from secrets. Export/import and backup are
+explicit user actions; no cloud account is required.
+
+Future RF/GPS: APRS-IS first. Later add TCP KISS, serial KISS and NMEA GPS behind
+transport interfaces. jSerialComm is a candidate for COM ports. Integrate external
+Dire Wolf before considering an embedded modem. Keep IGate transmit policy
+explicit and separate from ordinary APRS-IS messaging.
+
+Packaging/testing: Compose uses jpackage/jlink to produce self-contained Windows
+MSI/EXE installers including a trimmed Java runtime. Build on Windows CI and test
+the installer on a clean PC without Java/developer tools. Ship required graphics
+runtimes. Review dependency licenses and map attributions. Use protocol tests,
+loopback integration, database migration/restart tests, replay and UI smoke tests.
+Start with internal extension interfaces rather than executable user plugins.
+
+Alternatives
+
+Tauri + TypeScript UI + MapLibre GL JS is the browser-based fallback. Windows uses
+WebView2. Our JVM core would require a bundled helper and versioned IPC, increasing
+packaging and lifecycle work. A small Tauri shell does not eliminate that JVM.
+
+Qt 6 + MapLibre Native Qt has documented Windows builds, but introduces C++/QML,
+a Kotlin bridge/helper, and separate Qt distribution/license considerations.
+
+WPF/Avalonia is reasonable for a .NET-centered team, but still needs a deliberate
+map component and Kotlin interop. It offers less direct reuse of our current work.
+
+Prototype acceptance gate
+1. Packaged Windows x64 map using pdeffenb, with no developer tools installed.
+2. Correct APRS symbols/selection at 10,000 stations; 50,000-station stress test.
+3. Replay 100 station updates/second while map and chat remain usable.
+4. Measure CPU, RAM and GPU on this NUC, including idle, minimize/restore,
+   screen lock, sleep/resume, DPI and multiple monitors.
+5. Verify persistent chats, deduplication, ACK/retry and restart recovery.
+6. Verify offline packs and tile-server failure behavior.
+7. Compare native graphics backends. If reliability is inadequate, evaluate
+   MapLibre GL JS/WebView2 behind the same map abstraction.
+These are proposed tests, not measured results.
+
+Primary sources
+https://maplibre.org/maplibre-compose/
+https://maplibre.org/maplibre-compose/getting-started/
+https://github.com/maplibre/maplibre-compose/releases
+https://maplibre.org/maplibre-compose/layers/
+https://maplibre.org/maplibre-compose/offline/
+https://maplibre.org/maplibre-compose/requests/
+https://github.com/JetBrains/compose-multiplatform
+https://kotlinlang.org/docs/multiplatform/compose-native-distribution.html
+https://docs.gradle.org/current/userguide/compatibility.html
+https://sqldelight.github.io/sqldelight/2.1.0/multiplatform_sqlite/
+https://www.sqlite.org/wal.html
+https://v2.tauri.app/concept/process-model/
+https://v2.tauri.app/develop/sidecar/
+https://maplibre.org/maplibre-native-qt/docs/md_docs_2Building.html
+https://github.com/Fazecast/jSerialComm
+https://learn.microsoft.com/windows/uwp/security/data-protection

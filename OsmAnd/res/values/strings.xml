@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+    <string name="aprs_messages">Messages</string>
+    <string name="aprs_message_station">Message</string>
+    <string name="aprs_new_chat">New chat</string>
+    <string name="aprs_no_chats">No conversations yet. Touch a station and choose Message, or start a new chat by callsign.</string>
+    <string name="aprs_chat_setup">Enter your callsign and SSID in APRSISOSM settings first.</string>
+    <string name="aprs_chat_call_hint">Callsign with SSID, for example N0CALL-7</string>
+    <string name="aprs_chat_summary">%1$s · %2$d unread\n%3$s\n%4$s</string>
+    <string name="aprs_chat_title">Chat with %1$s</string>
+    <string name="aprs_chat_compose">Write an APRS message</string>
+    <string name="aprs_chat_send">Send</string>
+    <string name="aprs_chat_counter">%1$d / 67 characters</string>
+    <string name="aprs_chat_invalid">Use 1–67 printable ASCII characters, excluding |, ~ and {.</string>
+    <string name="aprs_chat_protocol_notice">APRS messages are public and unencrypted. Acknowledged means the receiving station confirmed receipt. Queued messages need a verified connection; retries stop after five attempts or 15 minutes.</string>
+    <string name="aprs_chat_connection">%1$s · %2$s</string>
+    <string name="aprs_chat_message">%1$s · %2$s\n%3$s\n%4$s</string>
+    <string name="aprs_chat_queued">Queued — connect APRSISOSM to send</string>
+    <string name="aprs_chat_sending">Sending…</string>
+    <string name="aprs_chat_waiting">Sent — awaiting acknowledgement</string>
+    <string name="aprs_chat_acknowledged">Acknowledged by station</string>
+    <string name="aprs_chat_rejected">Rejected by station</string>
+    <string name="aprs_chat_no_ack">Not acknowledged — retry limit or queue timeout reached</string>
+    <string name="aprs_chat_received">Received</string>
+    <string name="aprs_chat_storage_error">Chat could not be saved. Please try again.</string>
+    <string name="aprs_chat_notification">Message from %1$s</string>
+    <string name="aprs_chat_channel">APRS messages</string>
+    <string name="aprs_speedometer">GPS speedometer. Tap to switch mph and km/h.</string>
+    <string name="aprs_speed_waiting">Waiting for GPS</string>
+    <string name="aprs_north_locked">North is always up</string>
+
     <string name="aprs_notification_channel">APRS connection</string>
     <string name="aprs_notification_status">%1$s · %2$s stations · %3$s</string>
     <string name="aprs_beacon_on">GPS beaconing enabled</string>

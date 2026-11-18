@@ -22,11 +22,29 @@ class AprsService : Service(), LocationListener {
     private lateinit var locations: LocationManager
     private var wakeLock: PowerManager.WakeLock? = null
     private var statusJob: Job? = null
+    private var messageJob: Job? = null
+    private var outboxJob: Job? = null
     private val preferences by lazy { getSharedPreferences("aprs", MODE_PRIVATE) }
 
     override fun onCreate() {
         super.onCreate()
         locations = getSystemService(LOCATION_SERVICE) as LocationManager
+        messageJob = scope.launch {
+            client.messages.collect { message ->
+                val account = preferences.getString("callsign", "")!!
+                if (message.recipient == account) {
+                    try {
+                        val added = AprsChatStore.get(this@AprsService).receive(account, message)
+                        if (added) notifyMessage(message)
+                        if (message.id != null) client.acknowledge(account, message.sender, message.id!!)
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        // A failed database write is deliberately not acknowledged.
+                        net.osmand.PlatformUtil.getLog(AprsService::class.java).error("APRS message processing failed", e)
+                    }
+                }
+            }
+        }
         if (Build.VERSION.SDK_INT >= 26) {
             getSystemService(NotificationManager::class.java).createNotificationChannel(
                 NotificationChannel(CHANNEL, getString(R.string.aprs_notification_channel), NotificationManager.IMPORTANCE_LOW))
@@ -53,6 +71,31 @@ class AprsService : Service(), LocationListener {
                 longitude = preferences.getFloat("filter_lon", 0f).toDouble(),
                 beaconEnabled = preferences.getBoolean("beacon", false))
             client.start(config)
+            outboxJob?.cancel()
+            outboxJob = scope.launch {
+                val store = AprsChatStore.get(this@AprsService)
+                while (isActive) {
+                    try {
+                        val pending = store.pending(config.callsign)
+                        if (client.state.value == AprsConnectionState.VERIFIED) {
+                            for (message in pending) {
+                                store.attempted(message.row)
+                                try {
+                                    client.sendMessage(config.callsign, message.peer, message.body, message.wireId!!)
+                                    store.transmitted(message.row, true)
+                                } catch(e: Exception) {
+                                    if(e is CancellationException) throw e
+                                    store.transmitted(message.row, false)
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        if (e is CancellationException) throw e
+                        // Keep the persisted outbox for the next verified connection.
+                    }
+                    delay(3000)
+                }
+            }
             // A partial wake lock keeps socket processing and beacon scheduling alive with the screen off.
             if (wakeLock == null) {
                 wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
@@ -84,6 +127,22 @@ class AprsService : Service(), LocationListener {
         stop(this)
     }
 
+    private fun notifyMessage(message: AprsMessage) {
+        val manager = getSystemService(NotificationManager::class.java)
+        if (Build.VERSION.SDK_INT >= 26) manager.createNotificationChannel(
+            NotificationChannel("aprs_messages", getString(R.string.aprs_chat_channel), NotificationManager.IMPORTANCE_DEFAULT))
+        val open = Intent(this, MapActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            .setAction("net.osmand.aprs.CHAT." + message.sender)
+            .putExtra("aprs_chat", message.sender)
+        val tap = PendingIntent.getActivity(this, message.sender.hashCode(), open,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        manager.notify("aprs_chat_" + message.sender, 7282, NotificationCompat.Builder(this, "aprs_messages")
+            .setSmallIcon(R.drawable.ic_action_sensor)
+            .setContentTitle(getString(R.string.aprs_chat_notification, message.sender))
+            .setContentText(message.text).setContentIntent(tap).setAutoCancel(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE).build())
+    }
+
     private fun notification(): Notification {
         val open = PendingIntent.getActivity(this, 0, Intent(this, MapActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -102,6 +161,7 @@ class AprsService : Service(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
+        AprsMotion.update(location)
         if (!location.hasAccuracy()) return
         // Convert monotonic fix age to wall time: stale cached GPS must never become a fresh beacon.
         val ageMillis = (SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos) / 1_000_000

@@ -105,57 +105,20 @@ public class CompassButton extends MapButton {
 		super.updateIcon();
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
-	private void setupTouchListener() {
-		setOnTouchListener(new View.OnTouchListener() {
+    private void setupTouchListener() {
+        setOnTouchListener(null);
+        setOnClickListener(v -> app.showShortToastMessage(R.string.aprs_north_locked));
+        setOnLongClickListener(null);
+    }
 
-			private final GestureDetector gestureDetector = new GestureDetector(getContext(), new SimpleOnGestureListener() {
-				@Override
-				public boolean onDoubleTap(@NonNull MotionEvent e) {
-					app.getMapViewTrackingUtilities().requestSwitchCompassToNextMode();
-					return true;
-				}
-
-				@Override
-				public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
-					Fragment fragment = mapActivity.getSupportFragmentManager().findFragmentByTag(ConfigureMapFragment.TAG);
-					if (fragment != null) {
-						showCompassModeWidgetDialog();
-						return true;
-					}
-					if (settings.getCompassMode() == NORTH_IS_UP) {
-						app.showShortToastMessage(R.string.compass_click_north_is_up);
-					} else {
-						rotateMapToNorth();
-					}
-					return true;
-				}
-
-				@Override
-				public void onLongPress(@NonNull MotionEvent e) {
-					showCompassModeWidgetDialog();
-				}
-			});
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return gestureDetector.onTouchEvent(event);
-			}
-		});
-	}
-
-	private void setupAccessibilityActions() {
-		ViewCompat.replaceAccessibilityAction(this, ACTION_CLICK,
-				app.getString(NORTH_IS_UP.getTitleId()), (view, arguments) -> {
-					rotateMapToNorth();
-					return true;
-				});
-		ViewCompat.replaceAccessibilityAction(this, ACTION_LONG_CLICK,
-				app.getString(R.string.choose_map_orientation), (view, arguments) -> {
-					showCompassModeWidgetDialog();
-					return true;
-				});
-	}
+    private void setupAccessibilityActions() {
+        ViewCompat.replaceAccessibilityAction(this, ACTION_CLICK,
+                app.getString(R.string.aprs_north_locked), (view, arguments) -> {
+                    rotateMapToNorth();
+                    return true;
+                });
+        ViewCompat.removeAccessibilityAction(this, ACTION_LONG_CLICK.getId());
+    }
 
 	private void rotateMapToNorth() {
 		getMapView().resetRotation();
@@ -166,7 +129,7 @@ public class CompassButton extends MapButton {
 	}
 
 	private void showCompassModeWidgetDialog() {
-		CompassModeWidgetDialogController.showDialog(mapActivity);
+		app.showShortToastMessage(R.string.aprs_north_locked);
 	}
 
 	@Override

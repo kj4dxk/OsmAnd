@@ -1998,12 +1998,19 @@ public class OsmandSettings {
 	public static final int ROTATE_MAP_COMPASS = 2;
 	public static final int ROTATE_MAP_MANUAL = 3;
 
-	public final CommonPreference<Integer> ROTATE_MAP = new IntPreference(this, "rotate_map", ROTATE_MAP_MANUAL).makeProfile().cache();
+	public final CommonPreference<Integer> ROTATE_MAP = new IntPreference(this, "rotate_map", ROTATE_MAP_NONE) {
+        @Override public Integer get() { return ROTATE_MAP_NONE; }
+        @Override public Integer getModeValue(ApplicationMode mode) { return ROTATE_MAP_NONE; }
+        @Override public boolean set(Integer value) { return super.set(ROTATE_MAP_NONE); }
+        @Override public boolean setModeValue(ApplicationMode mode, Integer value) {
+            return super.setModeValue(mode, ROTATE_MAP_NONE);
+        }
+    }.makeProfile();
 
 	{
-		ROTATE_MAP.setModeDefaultValue(ApplicationMode.CAR, ROTATE_MAP_BEARING);
-		ROTATE_MAP.setModeDefaultValue(ApplicationMode.BICYCLE, ROTATE_MAP_BEARING);
-		ROTATE_MAP.setModeDefaultValue(ApplicationMode.PEDESTRIAN, ROTATE_MAP_BEARING);
+		ROTATE_MAP.setModeDefaultValue(ApplicationMode.CAR, ROTATE_MAP_NONE);
+		ROTATE_MAP.setModeDefaultValue(ApplicationMode.BICYCLE, ROTATE_MAP_NONE);
+		ROTATE_MAP.setModeDefaultValue(ApplicationMode.PEDESTRIAN, ROTATE_MAP_NONE);
 	}
 
 	public boolean isCompassMode(@NonNull CompassMode compassMode) {

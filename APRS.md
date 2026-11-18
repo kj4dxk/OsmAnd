@@ -224,3 +224,48 @@ APRS-IS transmission was used for this service lifecycle test. The existing 17 A
 unit tests passed; the core suite reported 2,407 tests, zero failures and 37 skipped.
 The final incremental universal APK build passed with no Gradle warnings; a full
 shared-source compilation still reports inherited Kotlin/Java source warnings.
+
+## Preview4: orientation, speed and conversations
+
+North stays up in every profile, including imported profiles. Rotation gestures,
+orientation settings and orientation quick actions are removed or constrained;
+native renderer animations also target zero bearing. The compass explains the lock.
+
+The map has a native GPS speed dial inspired by APRSISMO. Tap it to switch mph/km/h.
+It replaces the stock profile speedometer while APRSISOSM is active. A fix without
+speed or older than 15 seconds displays an unavailable reading rather than a stale
+speed. The dial belongs to the map HUD and does not cover settings fragments.
+
+Touch a station, then Message, to open its conversation. Messages in the map menu
+lists conversations by full callsign/SSID with unread counts, latest text and time.
+New chat also accepts a typed callsign. Chats are isolated by the local account as
+well as the peer, and are stored in the app-private aprs_chats.db SQLite database.
+They survive process death and app restarts; uninstalling or clearing app data
+removes them. Draft text survives dialog recreation, not a complete process stop.
+
+Text is limited to 67 printable ASCII characters, excluding APRS control characters.
+Messages are public and unencrypted. Acknowledged means a station sent an APRS ACK,
+not that a human read the message. SQLite persists the outgoing queue before send.
+Only a verified connection sends text or ACKs. Retry spacing is at least 30 seconds,
+with at most five attempts and a 15-minute queue lifetime. Connect is still required
+for queued messages to transmit. Incoming numbered messages are deduplicated by
+account, sender, ID and body over 24 hours, and saved before acknowledgement.
+ACK, REJ and reply-ack fields are understood. Failed messages stay visible in history.
+
+Verification: 23 APRS JVM tests passed, including loopback messaging and speed
+conversion/freshness. S26/API36 loopback checks verified received messages, ACK
+transmission, acknowledged outgoing text, duplicate suppression, ignored messages
+for another recipient, separate SSID conversations, station-to-chat navigation and
+persistence across a force-stop/relaunch. Android ICU regex compatibility was tested
+on the device after a JVM-only test initially missed an unescaped-brace pattern.
+All service tests used local fake callsigns; no public APRS message was sent.
+
+Candidates from the APRSISMO Lua source for later ports: adaptive GeniusBeaconing,
+station breadcrumb trails and GPX export, complete APRS symbols/overlays, station
+lists and filters, richer course/altitude/status displays, APRS weather reports,
+packet diagnostics/replay, and bulletin/group-message views. These are roadmap
+items, not features included in preview4.
+
+APRSIS64 desktop architecture research is in APRSIS64-ARCHITECTURE.txt. It recommends
+a Compose Desktop/MapLibre Native prototype with an independently buildable shared
+core and shared persistence contracts. No APRSIS64 implementation is started here.

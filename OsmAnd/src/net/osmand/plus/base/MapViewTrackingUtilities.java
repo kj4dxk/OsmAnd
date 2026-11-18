@@ -624,20 +624,10 @@ public class MapViewTrackingUtilities implements OsmAndLocationListener, IMapLoc
 		setMapLinkedToLocation(false);
 	}
 
-	public void requestSwitchCompassToNextMode() {
-		if (routingHelper.isFollowingMode()) {
-			if (compassRequest + COMPASS_REQUEST_TIME_INTERVAL_MS > System.currentTimeMillis()) {
-				compassRequest = 0;
-				switchCompassToNextMode();
-			} else {
-				compassRequest = System.currentTimeMillis();
-				app.showShortToastMessage(R.string.press_again_to_change_the_map_orientation);
-			}
-		} else {
-			compassRequest = 0;
-			switchCompassToNextMode();
-		}
-	}
+    public void requestSwitchCompassToNextMode() {
+        app.showShortToastMessage(R.string.aprs_north_locked);
+        if (mapView != null) mapView.resetRotation();
+    }
 
 	private void switchCompassToNextMode() {
 		if (mapView != null) {

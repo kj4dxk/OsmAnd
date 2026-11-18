@@ -44,7 +44,7 @@ public abstract class BaseCompassModeDialogController extends BaseDialogControll
 		displayData.putExtra(TITLE, getString(R.string.rotate_map_to));
 		displayData.putExtra(SUBTITLE, getString(R.string.compass_click_desc));
 		displayData.putExtra(BACKGROUND_COLOR, profileColorAlpha);
-		for (CompassMode compassMode : CompassMode.values()) {
+		for (CompassMode compassMode : new CompassMode[] { CompassMode.NORTH_IS_UP }) {
 			displayData.addDisplayItem(new DisplayItem()
 					.setTitle(getString(compassMode.getTitleId()))
 					.setLayoutId(R.layout.bottom_sheet_item_with_descr_and_radio_btn)
