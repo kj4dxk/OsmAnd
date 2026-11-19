@@ -1,123 +1,265 @@
-APRSIS64 architecture research — 17 November 2026
+APRSIS64 revised architecture assessment — 18 November 2026
 
-Recommendation
-Use Kotlin/JVM, Compose Multiplatform, and MapLibre Native through MapLibre Compose
-for a Windows x64 application. Reuse the existing Kotlin APRS core in process.
-Make this conditional on a Windows rendering and installer prototype. This is a
-researched recommendation, not a claim of measured performance.
+RECOMMENDATION
+Use Kotlin/JVM + Compose Multiplatform for Windows, sharing a narrow APRS engine,
+application policies, database model and presentation state with APRSISOSM.
+Prototype MapLibre Native through MapLibre Compose first. Its Windows renderer
+remains a conditional choice until driver, multiwindow, packaging and power tests
+pass. Keep the existing Android OsmAnd renderer and UI initially.
 
-MapLibre Compose now documents native Windows desktop support. Its API remains
-pre-1.0 and evolving. The current setup requires Java 25+ and lists Windows x64
-OpenGL/Vulkan runtimes. Pin exact versions and isolate the map API. Give desktop
-its own compatible build configuration, preserving Android's Java 17 setup.
-Extract a narrow, independently buildable aprs-core artifact from the larger
-OsmAnd-shared module; do not copy it into a second codebase or require Android
-Gradle plugins in desktop builds. Java 17 shared-core bytecode can run on a newer
-desktop JVM. Gradle documents
-Java 25 support beginning with Gradle 9.1.
+This supersedes the 17 November proposal. It covers feature families found in
+APRSIS32 source, not a completed function-by-function parity audit. Libraries
+provide infrastructure; substantial APRS behavior still needs implementation.
 
-Component choices
+SOURCE BASIS
+Legacy source: \\synology2\synology2\Daddy\Ham Radio Source Code\1\aprs\APRSISCE
+Embedded version 2024/09/05 17:14; main source CVS revision 1.168.
+APRSIS32/APRSIS32.vcxproj compiles ../APRSISCE.cpp and ../APRSISCE.rc.
+Reviewed menus, Port.c registry, Config.h structures, Satellite.c/header and modules
+including MbTile3, ShapFile, GPXFiles, GeoCaches, echolink, filter, KISS and AGW.
 
-UI: Compose Desktop. Use a map-centered workspace, resizable station/chat panes,
-keyboard shortcuts, station search, status strip, and tray controls. Transport
-lifetime belongs to an application session, not a map widget or recomposition.
-Tray operation must be explicit, with clear disconnect/exit controls.
+Android source: local OsmAnd aprs-android branch, preview4. Inspected AprsProtocol,
+AprsIsClient, AprsMessages, AprsChatStore, AprsService and PC-service adapters.
+Prior validation: 23 APRS tests and emulator checks for ACKs, duplicate handling,
+persistent chats across restarts, full-SSID separation and station-to-chat actions.
+Those are existing results, not fresh tests run during this assessment.
+No desktop application or APK was built for this research.
 
-Maps: MapLibre Native through MapLibre Compose. Start with existing pdeffenb raster
-tiles; add a self-hosted vector style after verifying its schema, fonts and sprites.
-Draw stations using batched GeoJSON and symbol layers, tracks using line layers,
-and areas using fill layers. Avoid thousands of individual UI widgets for symbols.
-Use feature hit testing for station selection and chat. Keep north-up locked.
-Create a proper APRS symbol atlas, including overlay characters and attribution.
+REUSE FROM APRSISOSM
+Direct starting points:
+- Kotlin identity/endpoint validation, verified APRS-IS login, Ktor TCP connection
+  and reconnects, position formatting/parsing, bounded station cache, beacon gating.
+- Text messages, ACK/REJ/reply-ACK codecs and speed/freshness calculations.
+- Tests, including malformed input, stale fixes and connection shutdown.
+- Product behavior: north-up, select station to chat, inbox, clear connection state,
+  explicit session control and pdeffenb services without cloud/paid dependencies.
 
-Map abstraction: MapSurface handles viewport, basemap, station/track layers,
-selection and hit testing. Domain code must not depend on MapLibre objects. This
-contains API changes and permits a browser-renderer fallback if necessary.
+Extract rather than duplicate:
+- Durable outbox/retry and incoming persistence-before-ACK behavior currently live
+  in Android AprsService/AprsChatStore. Preserve numbered-message deduplication,
+  repeated ACKs, status transitions and own-account + full-peer-SSID identity.
+- AprsChatStore uses Android SQLiteOpenHelper, so it is not a shared database yet.
+- Photon integration uses Android UI and HttpURLConnection. Extract typed service
+  clients, retaining the working URLs and behavior.
+- AprsSpeedometerView, dialogs, foreground service and OsmAnd map layers are
+  Android-specific. Reuse their state/logic, then implement the Windows controls.
+- Keep Android foreground-service/notification handling; Windows uses an app session
+  independent of windows, with explicit tray/disconnect/quit controls.
 
-Persistence: SQLite with versioned migrations and a serialized writer. SQLDelight
-is the preferred shared schema/repository tool, with Android and JVM JDBC drivers.
-WAL allows readers alongside the writer; keep transactions short, set a busy
-timeout and test recovery. Separate durable chats/outbox, station/track history,
-and disposable map cache. Key chats by full own callsign and peer callsign/SSID.
-The Android chat store currently uses SQLiteOpenHelper; move its schema and
-repository behavior behind a shared data interface before desktop reuse. Desktop
-must not depend on Android SQLite APIs. Plan the existing SQLDelight 1.x migration
-separately rather than silently upgrading the entire Android project.
+Gaps in today's shared engine:
+- AprsProtocol explicitly rejects Mic-E and ambiguous coordinates.
+- Objects/items become positions keyed by name: ownership, kill events and complete
+  lifecycle semantics need richer models.
+- Typed weather, telemetry, course/altitude extensions and RF provenance are absent.
+- AprsIsClient currently exposes only messages to the exact local callsign, which
+  cannot support bulletins, eavesdrop, TACTICAL and all query/group behavior.
+- The 2,000-station/30-minute cache and fixed 120-second beacon interval are mobile
+  defaults, not full desktop history or Genius beaconing.
+- Login/beacon branding must become an application parameter instead of APRSISOSM
+  literals. Fixed desktop positions need an explicit source rather than pretending
+  to be a continuously refreshed GPS fix.
+- Android ICU and desktop JVM regex behavior differed in previous testing; both
+  platforms must remain part of validation.
 
-Application state: Kotlin coroutines, StateFlow, kotlinx.serialization and existing
-Ktor transport. Share retries, acknowledgements, duplicate handling, outbox policy,
-clock handling and connection management. Keep domain objects independent of UI.
-Use bounded queues and debounce map updates independently from packet handling.
-Acknowledgements must not wait for redraw. Bound station cache, tracks and packet
-logs. Add credential-redacted diagnostics and packet replay.
+LIBRARY CHOICES AND RESPONSIBILITIES
 
-Services: Thin typed HTTP adapters for Photon search and OSRM-compatible Valhalla
-routing, including car/foot/bike profiles. Backend outages must not stop APRS.
-Do not embed planet imports or routing-server processes in the desktop client.
-Centralize tile/style/font/search/routing URLs in named service profiles. Keep
-map attribution and allow self-hosted sources without proprietary map accounts.
-
-Offline: Start with MapLibre region packs containing tiles and required style
-assets. Include quotas, region/zoom selection and progress. Add read-only MBTiles
-through a tested resource-provider adapter. PMTiles requires its own reader or
-adapter; GL JS support does not imply identical native support. Cached maps do
-not imply offline search or routing.
-
-Windows integration: Small adapters for application-data paths, tray, notifications,
-dialogs, URL opening and DPAPI-protected credentials. Keep credentials out of logs.
-Use versioned local settings separate from secrets. Export/import and backup are
-explicit user actions; no cloud account is required.
-
-Future RF/GPS: APRS-IS first. Later add TCP KISS, serial KISS and NMEA GPS behind
-transport interfaces. jSerialComm is a candidate for COM ports. Integrate external
-Dire Wolf before considering an embedded modem. Keep IGate transmit policy
-explicit and separate from ordinary APRS-IS messaging.
-
-Packaging/testing: Compose uses jpackage/jlink to produce self-contained Windows
-MSI/EXE installers including a trimmed Java runtime. Build on Windows CI and test
-the installer on a clean PC without Java/developer tools. Ship required graphics
-runtimes. Review dependency licenses and map attributions. Use protocol tests,
-loopback integration, database migration/restart tests, replay and UI smoke tests.
-Start with internal extension interfaces rather than executable user plugins.
-
-Alternatives
-
-Tauri + TypeScript UI + MapLibre GL JS is the browser-based fallback. Windows uses
-WebView2. Our JVM core would require a bundled helper and versioned IPC, increasing
-packaging and lifecycle work. A small Tauri shell does not eliminate that JVM.
-
-Qt 6 + MapLibre Native Qt has documented Windows builds, but introduces C++/QML,
-a Kotlin bridge/helper, and separate Qt distribution/license considerations.
-
-WPF/Avalonia is reasonable for a .NET-centered team, but still needs a deliberate
-map component and Kotlin interop. It offers less direct reuse of our current work.
-
-Prototype acceptance gate
-1. Packaged Windows x64 map using pdeffenb, with no developer tools installed.
-2. Correct APRS symbols/selection at 10,000 stations; 50,000-station stress test.
-3. Replay 100 station updates/second while map and chat remain usable.
-4. Measure CPU, RAM and GPU on this NUC, including idle, minimize/restore,
-   screen lock, sleep/resume, DPI and multiple monitors.
-5. Verify persistent chats, deduplication, ACK/retry and restart recovery.
-6. Verify offline packs and tile-server failure behavior.
-7. Compare native graphics backends. If reliability is inadequate, evaluate
-   MapLibre GL JS/WebView2 behind the same map abstraction.
-These are proposed tests, not measured results.
-
-Primary sources
-https://maplibre.org/maplibre-compose/
-https://maplibre.org/maplibre-compose/getting-started/
-https://github.com/maplibre/maplibre-compose/releases
-https://maplibre.org/maplibre-compose/layers/
-https://maplibre.org/maplibre-compose/offline/
-https://maplibre.org/maplibre-compose/requests/
+1. UI — Compose Multiplatform/Desktop (Apache-2.0).
+Windows menus, keyboard controls, station/chat/log panes and multiple tracking
+windows. Own workspace persistence and simple resizable layouts; Compose is not
+a ready-made docking manager. Share state models first. Selected future Compose
+chat/settings/chart components can run on Android through a compatible integration.
+Do not migrate all OsmAnd UI merely to gain desktop reuse.
 https://github.com/JetBrains/compose-multiplatform
-https://kotlinlang.org/docs/multiplatform/compose-native-distribution.html
-https://docs.gradle.org/current/userguide/compatibility.html
+
+2. Map — MapLibre Native + MapLibre Compose (BSD licenses).
+Use pdeffenb raster tiles first, optional vector styles later. Batch stations into
+symbol layers, tracks/network paths into lines, and areas into fills. Implement
+APRS symbol/overlay composition, hit testing, overlap selection, wind barbs,
+ambiguity areas, DF sectors, PHG ranges and satellite footprints ourselves.
+Current desktop docs require Java 25+, native-access configuration, Windows
+OpenGL/Vulkan runtimes; OpenGL requires external-memory driver support.
+The public API evolves. Pin a tested release and hide it behind MapSurface.
+Validate on this Intel NUC, remote desktop, sleep/resume, DPI and multiple windows.
+https://maplibre.org/maplibre-compose/getting-started/
+https://github.com/maplibre/maplibre-compose
+https://maplibre.org/maplibre-compose/layers/
+https://github.com/maplibre/maplibre-native/blob/main/LICENSE.md
+https://github.com/maplibre/maplibre-compose/blob/main/LICENSE
+
+Alternative: Mapsforge (LGPLv3 with its documented linking simplification).
+Supports Android and desktop Java with its own offline vector format. Evaluate
+as a 2D alternative if MapLibre fails the Windows test. Expect AWT/Compose and
+custom-layer work; do not assume identical style/MBTiles support or lower CPU use.
+GL JS/WebView2 is another renderer fallback but adds browser integration.
+https://github.com/mapsforge/mapsforge
+
+3. Networking/state — existing Ktor, coroutines, serialization.
+Decode once into typed events; fan out to storage, radio policy and presentation.
+ACKs must not wait for rendering. Separate reliable message processing from
+coalesced map updates. Use bounded queues, explicit clocks and transport contracts.
+Keep compatible dependencies; do not automatically upgrade Android's Ktor 3.1.3.
+https://ktor.io/docs/client-supported-platforms.html
+
+4. Database — SQLite + SQLDelight (SQLDelight: Apache-2.0).
+Shared schemas/repositories with Android and JVM drivers. Migrate aprs_chats.db
+without losing account/peer keys, IDs, states or unread counts. Use a serialized
+writer, short transactions and tested migrations/recovery. Durable chats/outbox,
+retained packets/tracks and disposable tile cache need separate retention rules.
+This replaces the platform dependency in the current store, not its useful behavior.
 https://sqldelight.github.io/sqldelight/2.1.0/multiplatform_sqlite/
-https://www.sqlite.org/wal.html
-https://v2.tauri.app/concept/process-model/
-https://v2.tauri.app/develop/sidecar/
-https://maplibre.org/maplibre-native-qt/docs/md_docs_2Building.html
+https://github.com/sqldelight/sqldelight/blob/master/LICENSE.txt
+
+5. Geometry — GeographicLib-Java (MIT) + LocationTech JTS (EDL/EPL choice).
+GeographicLib handles Earth-surface distance/bearing and range construction.
+JTS handles planar geometry, clipping, spatial indexing and hit tests after an
+appropriate projection. JTS alone is not geodesic math. Test antimeridian/poles.
+OsmAnd currently uses old com.vividsolutions JTS 1.14; isolate the desktop choice.
+Java libraries belong in Android/JVM adapters, not universal Kotlin commonMain.
+https://github.com/geographiclib/geographiclib-java
+https://locationtech.github.io/jts/
+https://github.com/locationtech/jts/blob/master/FAQ-LICENSING.md
+
+6. NWS/shapes — GeoTools gt-shapefile + referencing modules, Windows-side.
+Read SHP/SHX/DBF/PRJ, normalize geometries and share normalized data with Android.
+Avoid importing the entire desktop GIS stack into the phone app. APRS NWS decoding,
+alert expiry, office/product matching and notifications remain our code.
+A future direct weather API is separate from legacy APRS NWS behavior.
+https://docs.geotools.org/stable/userguide/library/data/shape.html
+https://github.com/geotools/geotools/blob/main/LICENSE.md
+
+7. Serial/GPS — jSerialComm for Windows; usb-serial-for-android for Android.
+jSerialComm's current SerialPort header offers Apache-2.0 or LGPLv3+; the Android
+USB library is MIT. Share framing and radio codecs, not hotplug/permission APIs.
+Native Bluetooth adapters handle platform-specific connections.
+Java Marine API (LGPLv3+) is the NMEA candidate for checksums, talker IDs and sentence
+aggregation. Android's native location API remains the phone GPS source.
+GPSd TCP and fixed-position operation are distinct adapters.
 https://github.com/Fazecast/jSerialComm
-https://learn.microsoft.com/windows/uwp/security/data-protection
+https://github.com/Fazecast/jSerialComm/blob/master/src/main/java/com/fazecast/jSerialComm/SerialPort.java
+https://github.com/mik3y/usb-serial-for-android
+https://github.com/ktuukkan/marine-api
+
+8. RF modem — external Dire Wolf through KISS TCP first.
+Dire Wolf supplies soundcard modem/TNC functions. It does not reproduce all of
+APRSIS32's gating rules, hearing history or device modes. Decide which component
+owns IGating/digipeating per port to avoid duplicate forwarding.
+Custom adapters still needed for KISS/AX.25, AGW, TEXT/CONVerse, D700/D710, FTM350,
+CWOP, local TCP feed and UDP/syslog modes found in Port.c.
+https://github.com/wb2osz/direwolf
+
+9. Satellites — Orekit (Apache-2.0), optional module.
+TLE propagation and visibility events for passes, tracks and footprints; manage
+required time/Earth data and stale TLEs. Validate reference passes and Android
+resource/API compatibility. Legacy Satellite.c uses gpredict/SGP4.
+predict4java is a smaller alternative; evaluate inherited PREDICT licensing and
+maintenance before selecting it. Do not port legacy Win32 satellite UI.
+https://github.com/CS-SI/Orekit
+https://github.com/davidmoten/predict4java
+
+10. Charts/instruments — Vico (Apache-2.0) and Compose Canvas.
+Candidate for weather/telemetry charts after a Windows smoke test. Shared units,
+freshness and history models; new Compose speedometer drawing. Android View and
+MPAndroidChart widgets cannot be reused directly on Windows.
+Telemetry PARM/UNIT/EQNS/BITS decoding and data retention remain application work.
+https://github.com/patrykandpatrick/vico
+
+11. Import/export — small streaming XML/CSV/JSON and file adapters.
+APRSIS32 settings, saved positions, GPX, POS overlays, geocaches, weather files,
+JT65/JS8Call/FT8 log tails, EchoLink directory, TLE files/URLs. JDK XML/NIO on
+Windows; Android stream/document adapters. Share parsing policy and DTOs.
+Handle rotated/truncated logs, encodings, time zones, renamed paths and unknown
+settings explicitly. Existing remote service availability needs separate testing.
+
+12. Windows integration — JNA (Apache-2.0 option), jpackage/jlink.
+Adapters for DPAPI secrets, paths, dialogs, notifications and lifecycle. Bundle
+Java runtime and graphics libraries in an x64 installer; test on a clean PC.
+Desktop Java 25 build remains independent of Android's working Java 17 build.
+Windows native APIs themselves are OS facilities, not open-source libraries.
+https://github.com/java-native-access/jna
+https://github.com/java-native-access/jna/blob/master/LICENSE
+https://kotlinlang.org/docs/multiplatform/compose-native-distribution.html
+
+FEATURE PARITY WORK THAT LIBRARIES DO NOT SUPPLY
+Packet model: raw paths, port/transport provenance, timestamps; Mic-E, compression,
+DAO/ambiguity, weather, telemetry, status, device IDs, third-party encapsulation,
+object/item ownership and live/kill events; preserve unknown packet diagnostics.
+
+Beaconing: Genius/adaptive policy, object schedules, status/manual transmissions,
+per-port rules and user profiles. Separate monotonic retry intervals from UTC.
+
+Messaging: existing direct chats plus configurable retry sets, RF double-ACK,
+eavesdrop, auto-reply throttling, bulletins, ANSRVR/CQ groups, QRU, email/query/
+WHO-IS interfaces and tactical labels. Wire ACK is not a read receipt.
+
+RF: direct/third-party/TCPIP hearing distinctions, duplicates, alias/hop accounting,
+digipeat transforms, IS-to-RF/RF-to-IS policies, receive-only and loop prevention.
+
+Operator views: buddies/nicknames, hashtag/shriek/platform/symbol/RF filters,
+packet scroller, DX/busy-station views, multi-track, dead reckoning, DF/PHG/network
+paths and explicitly bounded station/history retention.
+
+Maps: disk cache import, MBTiles, prefetch/purge, quota/progress, raster/overlay
+settings. SQLite reads MBTiles, but MapLibre needs a tested resource-provider
+adapter. Handle XYZ/TMS Y inversion. Native offline packs are not automatically
+MBTiles support. Cached maps do not imply offline search or routing.
+https://maplibre.org/maplibre-compose/requests/
+https://maplibre.org/maplibre-compose/offline/
+
+MODULES
+aprs-protocol: pure packet types/codecs, math and fixtures.
+aprs-engine: sessions, station/object state, beacon/message/radio policies.
+aprs-storage: contracts, shared schema and migrations.
+aprs-geo: renderer-neutral features, symbols and geometry adapters.
+aprs-integrations: radio codecs, satellite engine, files and service clients.
+aprs-presentation: immutable UI state, commands, optional Compose components.
+windows-app: Compose workspace, map adapter, COM/OS adapters and installer.
+android-osmand: existing plugin, map and service using the same engine.
+
+Extract a narrow independently versioned library, not the entire OsmAnd-shared
+build. Preserve existing iOS source-set contracts. Android/JVM sharing is useful
+even when a dependency is not universal KMP. Test Kotlin metadata/toolchain
+compatibility; newer desktop Kotlin does not guarantee older Android consumption.
+
+KEEP OUR WORKING PRODUCT DEFAULTS
+pdeffenb base http://pdeffenb.homeip.net:82
+Raster /raster/light/{z}/{x}/{y}.png
+Routing /osmand/route/v1/ (existing OSRM-compatible backend)
+Photon /api/search?q=
+Extract typed clients/configuration; endpoints were not retested in this research.
+Routing/search supplement APRSIS32 radio features. Preserve north-up and no
+paid/cloud/analytics dependencies. Optional APRS weather parsing is distinct from
+turning on OsmAnd's weather plugin. RF and added integrations remain configurable.
+
+PROVENANCE
+License labels are an initial dependency screen, not a transitive audit.
+The local OsmAnd LICENSE specifies GPLv3 code and separate, sometimes restricted
+artwork. Preserve code terms; create desktop artwork or use separately licensed
+symbols. Source access alone does not establish APRSIS32 redistribution permission;
+establish that before copying legacy code into a public repository.
+No legacy source has been published for this assessment.
+
+DELIVERY ORDER
+1. Turn this source survey into a parity ledger of menus, dynamic actions,
+   configuration fields and handlers, including development-only modes. Assign
+   fixtures and explicit implemented/replaced/deferred status to every feature.
+2. Extract existing core and chat policy with Android regressions tested. Migrate
+   saved databases; add richer events and missing parser formats.
+3. Packaged Windows prototype: pdeffenb map, station selection and persistent chats.
+   Proposed loads: 10k stations, 50k stress, 100 updates/sec, multiple windows.
+   Measure idle/active CPU/GPU/RAM/temperature, minimize, remote desktop, sleep,
+   server failures and offline cache. These are targets, not measured results.
+4. Complete Internet operator features, objects, weather/telemetry, groups/queries,
+   filters and configuration imports.
+5. RF virtual-TNC tests then hardware tests; complete satellites, NWS overlays and
+   external-program integrations. Full Windows parity includes these phases;
+   Android adopts modules selectively.
+6. Clean-installer and per-feature acceptance tests. Use passive replay/isolated
+   endpoints to avoid duplicate transmissions during legacy comparisons.
+
+OTHER STACKS
+Qt/C++ offers Windows UI and isolated legacy C reuse, but needs Kotlin bridging
+or a second core. Avalonia/.NET has a similar reuse cost. Tauri/Electron with
+web maps introduces another UI language/runtime and a JVM helper for today's core.
+Reconsider these only if the Windows prototype identifies a concrete advantage.
+The preferred reuse target is application behavior and data, not identical
+Windows and phone screens.
