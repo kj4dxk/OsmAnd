@@ -268,4 +268,15 @@ items, not features included in preview4.
 
 APRSIS64 desktop architecture research is in APRSIS64-ARCHITECTURE.txt. It recommends
 a Compose Desktop/MapLibre Native prototype with an independently buildable shared
-core and shared persistence contracts. No APRSIS64 implementation is started here.
+core and shared persistence contracts. The Windows prototype now lives at
+https://github.com/kj4dxk/APRSIS64.
+
+The canonical APRS code and tests are now a pinned submodule at libraries/aprs-core:
+https://github.com/kj4dxk/aprs-core. After cloning/updating, run
+`git submodule update --init libraries/aprs-core`. OsmAnd-shared includes its
+commonMain/commonTest/jvmTest sources directly, preserving Android and existing
+KMP targets without importing the Windows UI or its Java 25 toolchain. The
+net.osmand.shared.aprs namespace and default Android branding remain compatible.
+New core work is AGPL-3.0, matching APRSFoundation/APRSISMO; extracted GPLv3 code
+retains its original terms and notices. Android's chat database and foreground
+service remain its platform adapters; this extraction does not migrate user data.

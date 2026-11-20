@@ -80,6 +80,10 @@ kotlin {
 	val junidecodeVersion = "0.1.1"
 
 	sourceSets {
+		// Canonical APRS sources are shared with the Windows APRSIS64 application.
+		commonMain { kotlin.srcDir(rootProject.file("libraries/aprs-core/src/commonMain/kotlin")) }
+		commonTest { kotlin.srcDir(rootProject.file("libraries/aprs-core/src/commonTest/kotlin")) }
+		jvmTest { kotlin.srcDir(rootProject.file("libraries/aprs-core/src/jvmTest/kotlin")) }
 		commonMain.dependencies {
 			implementation("org.jetbrains.kotlin:kotlin-stdlib")
 			implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
